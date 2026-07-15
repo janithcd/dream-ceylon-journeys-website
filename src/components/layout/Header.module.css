@@ -1,0 +1,51 @@
+.logo {
+    width: 170px;
+    height: auto;
+    object-fit: contain;
+    transition:
+            width 500ms ease,
+            transform 500ms ease;
+}
+
+@media (max-width: 639px) {
+    .logo {
+        width: 145px;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .logo {
+        width: 175px;
+    }
+}
+
+@media (min-width: 1024px) and (max-height: 900px) {
+    .logo {
+        width: 195px;
+    }
+}
+
+/* Normal and larger monitors */
+@media (min-width: 1024px) and (min-height: 901px) {
+    .logo {
+        width: 170px;
+    }
+}
+
+.logoScrolled {
+    width: 155px;
+}
+
+/* Keep it clearly visible on short laptops after scrolling */
+@media (min-width: 1024px) and (max-height: 900px) {
+    .logoScrolled {
+        width: 178px;
+    }
+}
+
+/* Mobile after scrolling */
+@media (max-width: 639px) {
+    .logoScrolled {
+        width: 135px;
+    }
+}

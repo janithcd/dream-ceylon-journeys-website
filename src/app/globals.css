@@ -1,112 +1,120 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-manrope);
-  --font-display: var(--font-playfair);
+    --font-sans: var(--font-manrope);
+    --font-display: var(--font-playfair);
 
-  --color-brand-50: #f3f8f5;
-  --color-brand-100: #e3efe8;
-  --color-brand-200: #c6dfd0;
-  --color-brand-300: #9bc7ad;
-  --color-brand-400: #68aa87;
-  --color-brand-500: #438d69;
-  --color-brand-600: #2f7052;
-  --color-brand-700: #245a43;
-  --color-brand-800: #1e4837;
-  --color-brand-900: #173b2d;
-  --color-brand-950: #0b2f23;
+    /* Dream Ceylon brand teal */
+    --color-brand-50: #effaf9;
+    --color-brand-100: #d7f2ef;
+    --color-brand-200: #afe4df;
+    --color-brand-300: #79d0c9;
+    --color-brand-400: #3fb4ad;
+    --color-brand-500: #008d86;
+    --color-brand-600: #007b75;
+    --color-brand-700: #006660;
+    --color-brand-800: #07524f;
+    --color-brand-900: #083f3d;
+    --color-brand-950: #072d2c;
 
-  --color-brand-gold-light: #e4c57e;
-  --color-brand-gold: #c59737;
-  --color-brand-gold-dark: #9b7125;
+    /* Dream Ceylon brand yellow */
+    --color-brand-gold-light: #ffda6a;
+    --color-brand-gold: #fec52e;
+    --color-brand-gold-dark: #d79d00;
 
-  --color-sand-50: #fdfbf7;
-  --color-sand-100: #f8f2e8;
-  --color-sand-200: #eee1cd;
+    /* Dream Ceylon brand pink */
+    --color-brand-pink-light: #df6a87;
+    --color-brand-pink: #008D86;
+    --color-brand-pink-dark: #9f1f40;
+
+    --color-sand-50: #fdfbf8;
+    --color-sand-100: #f8f3ea;
+    --color-sand-200: #eee2d2;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #17211c;
+    --background: #ffffff;
+    --foreground: #202526;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 110px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 92px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+    background: var(--background);
+    color: var(--foreground);
 }
 
 ::selection {
-  background: rgba(197, 151, 55, 0.28);
-  color: #0b2f23;
+    background: rgba(254, 197, 46, 0.42);
+    color: #202526;
 }
 
 a,
 button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button,
-a {
-  outline-color: #c59737;
+    -webkit-tap-highlight-color: transparent;
+    outline-color:#008D86;
 }
 
 img {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 .font-display {
-  font-family: var(--font-playfair), Georgia, serif;
+    font-family: var(--font-playfair), Georgia, serif;
 }
 
 .text-balance {
-  text-wrap: balance;
+    text-wrap: balance;
 }
 
 .surface-grid {
-  background-image:
-          linear-gradient(
-                  to right,
-                  rgba(36, 90, 67, 0.055) 1px,
-                  transparent 1px
-          ),
-          linear-gradient(
-                  to bottom,
-                  rgba(36, 90, 67, 0.055) 1px,
-                  transparent 1px
-          );
-  background-size: 32px 32px;
+    background-image:
+            linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0.045) 1px,
+                    transparent 1px
+            ),
+            linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.045) 1px,
+                    transparent 1px
+            );
+    background-size: 34px 34px;
 }
 
 .soft-noise {
-  background-image:
-          radial-gradient(
-                  circle at 20% 15%,
-                  rgba(197, 151, 55, 0.12),
-                  transparent 35%
-          ),
-          radial-gradient(
-                  circle at 85% 10%,
-                  rgba(67, 141, 105, 0.15),
-                  transparent 34%
-          );
+    background-image:
+            radial-gradient(
+                    circle at 15% 20%,
+                    rgba(198, 45, 82, 0.13),
+                    transparent 34%
+            ),
+            radial-gradient(
+                    circle at 82% 12%,
+                    rgba(0, 141, 134, 0.09),
+                    transparent 30%
+            ),
+            radial-gradient(
+                    circle at 50% 100%,
+                    rgba(254, 197, 46, 0.05),
+                    transparent 36%
+            );
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
