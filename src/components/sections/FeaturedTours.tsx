@@ -13,7 +13,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 import {
-    featuredTours,
+    getFeaturedTours,
     type FeaturedTour,
 } from "@/data/featured-tours";
 
@@ -491,7 +491,9 @@ function TourRow({
     );
 }
 
-export function FeaturedTours() {
+export async function FeaturedTours() {
+    const featuredTours =
+        await getFeaturedTours();
     return (
         <section
             id="featured-tours"

@@ -9,6 +9,9 @@ import { PopularDestinations } from "@/components/sections/PopularDestinations";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeaturedTours } from "@/components/sections/FeaturedTours";
+import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
+import { FeaturedVehicles } from "@/components/sections/FeaturedVehicles";
+import { SignatureExperiences } from "@/components/sections/SignatureExperiences";
 
 const promises = [
   {
@@ -42,6 +45,12 @@ export default function Home() {
         <PopularDestinations />
 
           <FeaturedTours />
+
+          <WhyChooseUs />
+
+
+          <FeaturedVehicles />
+          <SignatureExperiences />
 
         <section
             id="dream-ceylon-promise"

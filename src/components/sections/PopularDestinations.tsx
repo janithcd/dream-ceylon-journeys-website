@@ -11,7 +11,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 import {
-    destinations,
+    getPopularDestinations,
     type Destination,
 } from "@/data/destinations";
 
@@ -29,8 +29,11 @@ function DestinationCard({
     variant: CardVariant;
     index: number;
 }) {
-    const featured = variant === "featured";
-    const compact = variant === "compact";
+    const featured =
+        variant === "featured";
+
+    const compact =
+        variant === "compact";
 
     const cardHeight = featured
         ? `
@@ -65,23 +68,6 @@ function DestinationCard({
             sm:text-5xl
           `;
 
-    const imageSizes = featured
-        ? `
-            (max-width: 1023px) 100vw,
-            58vw
-          `
-        : compact
-            ? `
-            (max-width: 639px) 100vw,
-            (max-width: 1023px) 50vw,
-            42vw
-          `
-            : `
-            (max-width: 767px) 100vw,
-            (max-width: 1279px) 50vw,
-            33vw
-          `;
-
     return (
         <Link
             href={`/destinations/${destination.slug}`}
@@ -94,13 +80,19 @@ function DestinationCard({
                 "hover:shadow-[0_28px_80px_rgba(18,35,32,0.22)]",
                 cardHeight,
             ].join(" ")}
-            aria-label={`Explore ${destination.name}`}
+            aria-label={`Explore ${destination.name}, Sri Lanka`}
         >
             <Image
                 src={destination.image}
                 alt={destination.imageAlt}
                 fill
-                sizes={imageSizes}
+                sizes={
+                    featured
+                        ? "(max-width: 1023px) 100vw, 58vw"
+                        : compact
+                            ? "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 42vw"
+                            : "(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+                }
                 className="
                     object-cover
                     transition-transform
@@ -110,7 +102,6 @@ function DestinationCard({
                 "
             />
 
-            {/* Stronger lower gradient for readable text */}
             <div
                 aria-hidden="true"
                 className="
@@ -122,7 +113,6 @@ function DestinationCard({
                 "
             />
 
-            {/* Subtle side shading */}
             <div
                 aria-hidden="true"
                 className="
@@ -134,7 +124,6 @@ function DestinationCard({
                 "
             />
 
-            {/* Brand-colour glow */}
             <div
                 aria-hidden="true"
                 className="
@@ -147,13 +136,7 @@ function DestinationCard({
                 "
             />
 
-            <div
-                className="
-                    absolute inset-x-0 top-0
-                    flex items-start justify-between
-                    p-5 sm:p-6
-                "
-            >
+            <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5 sm:p-6">
                 <span
                     className="
                         inline-flex items-center
@@ -164,7 +147,6 @@ function DestinationCard({
                         text-[10px] font-bold
                         uppercase tracking-[0.17em]
                         text-white
-                        shadow-sm
                         backdrop-blur-xl
                     "
                 >
@@ -172,15 +154,7 @@ function DestinationCard({
                 </span>
 
                 <div className="flex items-center gap-3">
-                    <span
-                        className="
-                            hidden
-                            font-display
-                            text-sm font-semibold
-                            text-white/60
-                            sm:block
-                        "
-                    >
+                    <span className="hidden font-display text-sm font-semibold text-white/60 sm:block">
                         {String(index + 1).padStart(
                             2,
                             "0"
@@ -224,7 +198,7 @@ function DestinationCard({
                         flex items-center gap-2
                         text-[10px] font-bold
                         uppercase tracking-[0.16em]
-                        text-white/68
+                        text-white/70
                         sm:text-[11px]
                     "
                 >
@@ -250,7 +224,7 @@ function DestinationCard({
 
                 <p
                     className={[
-                        "mt-4 max-w-xl text-white/80",
+                        "mt-4 max-w-xl text-white/82",
                         compact
                             ? "text-sm leading-6"
                             : "text-sm leading-7 sm:text-base",
@@ -290,26 +264,14 @@ function DestinationCard({
                     group-hover:ring-white/30
                 "
             />
-
-            <div
-                aria-hidden="true"
-                className="
-                    absolute inset-x-10 bottom-0
-                    h-px
-                    bg-gradient-to-r
-                    from-transparent
-                    via-brand-gold/75
-                    to-transparent
-                    opacity-0
-                    transition-opacity duration-500
-                    group-hover:opacity-100
-                "
-            />
         </Link>
     );
 }
 
-export function PopularDestinations() {
+export async function PopularDestinations() {
+    const destinations =
+        await getPopularDestinations(6);
+
     const featuredDestination =
         destinations[0];
 
@@ -364,7 +326,7 @@ export function PopularDestinations() {
                     <SectionHeading
                         eyebrow="Explore Sri Lanka"
                         title="Iconic places. Remarkable experiences."
-                        description="From ancient kingdoms and misty mountain landscapes to wildlife-rich national parks and tropical beaches, discover the destinations that make Sri Lanka unforgettable."
+                        description="Explore Sri Lanka’s ancient cities, misty hill country, wildlife-rich national parks, tropical beaches, and culturally significant destinations."
                     />
 
                     <Link
@@ -400,14 +362,7 @@ export function PopularDestinations() {
                     </Link>
                 </div>
 
-                {/* Main editorial composition */}
-                <div
-                    className="
-                        mt-12
-                        grid gap-5
-                        lg:grid-cols-12
-                    "
-                >
+                <div className="mt-12 grid gap-5 lg:grid-cols-12">
                     {featuredDestination ? (
                         <div className="lg:col-span-7">
                             <DestinationCard
@@ -448,19 +403,22 @@ export function PopularDestinations() {
                     </div>
                 </div>
 
-                {/* Balanced second row */}
                 <div
                     className="
-                        mt-5
-                        grid gap-5
+                        mt-5 grid gap-5
                         md:grid-cols-2
                         xl:grid-cols-3
                     "
                 >
                     {lowerDestinations.map(
-                        (destination, index) => (
+                        (
+                            destination,
+                            index
+                        ) => (
                             <DestinationCard
-                                key={destination.slug}
+                                key={
+                                    destination.slug
+                                }
                                 destination={
                                     destination
                                 }
