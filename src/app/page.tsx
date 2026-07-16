@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { PopularDestinations } from "@/components/sections/PopularDestinations";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { FeaturedTours } from "@/components/sections/FeaturedTours";
 
 const promises = [
   {
@@ -39,6 +40,8 @@ export default function Home() {
 
 
         <PopularDestinations />
+
+          <FeaturedTours />
 
         <section
             id="dream-ceylon-promise"
