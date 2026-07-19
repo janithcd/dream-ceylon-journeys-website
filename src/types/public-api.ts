@@ -56,3 +56,29 @@ export type PublicHomeResponse = {
     featuredPackages: PublicPackage[];
     featuredVehicles: PublicVehicle[];
 };
+
+export type PublicTripadvisorReview = {
+    id: string;
+    reviewerName: string;
+    reviewerLocation: string | null;
+    avatarUrl: string | null;
+    rating: number;
+    title: string | null;
+    text: string;
+    publishedDate: string | null;
+    travelDate: string | null;
+    tripType: string | null;
+    reviewUrl: string;
+    source: "Tripadvisor";
+};
+
+export type PublicTripadvisorReviewsResponse = {
+    success: boolean;
+    source: "Tripadvisor";
+    locationId: string;
+    listingUrl: string;
+    language: string;
+    count: number;
+    reviews: PublicTripadvisorReview[];
+    fetchedAt: string;
+};
