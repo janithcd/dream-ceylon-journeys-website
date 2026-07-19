@@ -5,7 +5,7 @@ export type NavigationItem = {
 
 export const mainNavigation: NavigationItem[] = [
     { label: "Home", href: "/" },
-    { label: "Destinations", href: "/destinations" },
+    { label: "Destinations", href: "/sri-lanka-destinations" },
     { label: "Tours", href: "/tours" },
     { label: "Experiences", href: "/experiences" },
     { label: "Vehicles", href: "/vehicles" },

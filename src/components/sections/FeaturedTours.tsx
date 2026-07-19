@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import {
     ArrowRight,
     CalendarDays,
     Check,
+    Compass,
     MapPinned,
     Sparkles,
 } from "lucide-react";
@@ -13,18 +13,122 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 import {
-    getFeaturedTours,
-    type FeaturedTour,
-} from "@/data/featured-tours";
+    getTours,
+    type WebsiteTourPackage,
+} from "@/lib/tours";
+
+function formatPrice(
+    tour: WebsiteTourPackage
+): string {
+    if (tour.price === null) {
+        return "Request quotation";
+    }
+
+    try {
+        return new Intl.NumberFormat(
+            "en-US",
+            {
+                style: "currency",
+                currency:
+                    tour.currency || "USD",
+                maximumFractionDigits: 0,
+            }
+        ).format(tour.price);
+    } catch {
+        return `${tour.currency} ${tour.price.toLocaleString()}`;
+    }
+}
+
+function getTourHighlights(
+    tour: WebsiteTourPackage
+): string[] {
+    if (tour.highlights.length > 0) {
+        return tour.highlights.slice(0, 4);
+    }
+
+    if (tour.inclusions.length > 0) {
+        return tour.inclusions.slice(0, 4);
+    }
+
+    return tour.destinations
+        .slice(0, 4)
+        .map(
+            (destination) =>
+                `Explore ${destination.name}`
+        );
+}
+
+function getTourRoute(
+    tour: WebsiteTourPackage
+): string[] {
+    return tour.destinations.map(
+        (destination) =>
+            destination.name
+    );
+}
+
+function TourImage({
+                       tour,
+                   }: {
+    tour: WebsiteTourPackage;
+}) {
+    if (!tour.imageUrl) {
+        return (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#043F3B] via-[#08736E] to-[#008D86] px-8 text-center">
+                <div className="max-w-sm text-white">
+                    <Compass
+                        size={48}
+                        className="mx-auto text-brand-gold"
+                        aria-hidden="true"
+                    />
+
+                    <p className="mt-5 text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
+                        Dream Ceylon Journeys
+                    </p>
+
+                    <p className="mt-3 font-display text-3xl font-semibold">
+                        {tour.title}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        // Tour images are dynamically supplied by the CRM backend.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+            src={tour.imageUrl}
+            alt={`${tour.title} private Sri Lanka tour`}
+            className="
+                absolute inset-0
+                h-full w-full
+                object-cover
+                transition-transform
+                duration-[1200ms]
+                ease-out
+                group-hover:scale-[1.06]
+            "
+            loading="lazy"
+        />
+    );
+}
 
 function TourRow({
                      tour,
                      index,
                  }: {
-    tour: FeaturedTour;
+    tour: WebsiteTourPackage;
     index: number;
 }) {
-    const reverse = index % 2 !== 0;
+    const reverse =
+        index % 2 !== 0;
+
+    const highlights =
+        getTourHighlights(tour);
+
+    const route =
+        getTourRoute(tour);
 
     return (
         <article
@@ -55,29 +159,14 @@ function TourRow({
                         : "lg:order-1",
                 ].join(" ")}
             >
-                <Image
-                    src={tour.image}
-                    alt={tour.imageAlt}
-                    fill
-                    sizes="
-                        (max-width: 1023px) 100vw,
-                        50vw
-                    "
-                    className="
-                        object-cover
-                        transition-transform
-                        duration-[1200ms]
-                        ease-out
-                        group-hover:scale-[1.06]
-                    "
-                />
+                <TourImage tour={tour} />
 
                 <div
                     aria-hidden="true"
                     className="
                         absolute inset-0
                         bg-gradient-to-t
-                        from-black/65
+                        from-black/70
                         via-black/10
                         to-transparent
                     "
@@ -86,26 +175,19 @@ function TourRow({
                 <div
                     className="
                         absolute
-                        left-5
-                        top-5
-                        flex
-                        items-center
-                        gap-3
-                        sm:left-7
-                        sm:top-7
+                        left-5 top-5
+                        flex items-center gap-3
+                        sm:left-7 sm:top-7
                     "
                 >
                     <span
                         className="
                             inline-flex
-                            items-center
-                            gap-2
+                            items-center gap-2
                             rounded-full
-                            border
-                            border-white/20
-                            bg-black/20
-                            px-4
-                            py-2
+                            border border-white/20
+                            bg-black/25
+                            px-4 py-2
                             text-[10px]
                             font-bold
                             uppercase
@@ -120,7 +202,7 @@ function TourRow({
                             aria-hidden="true"
                         />
 
-                        {tour.category}
+                        {tour.tourType}
                     </span>
 
                     <span
@@ -141,16 +223,13 @@ function TourRow({
                 <div
                     className="
                         absolute
-                        inset-x-0
-                        bottom-0
-                        p-6
-                        sm:p-8
+                        inset-x-0 bottom-0
+                        p-6 sm:p-8
                     "
                 >
                     <div
                         className="
-                            flex
-                            flex-wrap
+                            flex flex-wrap
                             gap-3
                             text-xs
                             font-semibold
@@ -160,14 +239,11 @@ function TourRow({
                         <span
                             className="
                                 inline-flex
-                                items-center
-                                gap-2
+                                items-center gap-2
                                 rounded-full
-                                border
-                                border-white/20
-                                bg-black/20
-                                px-3.5
-                                py-2
+                                border border-white/20
+                                bg-black/25
+                                px-3.5 py-2
                                 backdrop-blur-xl
                             "
                         >
@@ -177,20 +253,17 @@ function TourRow({
                                 aria-hidden="true"
                             />
 
-                            {tour.duration}
+                            {tour.durationLabel}
                         </span>
 
                         <span
                             className="
                                 inline-flex
-                                items-center
-                                gap-2
+                                items-center gap-2
                                 rounded-full
-                                border
-                                border-white/20
-                                bg-black/20
-                                px-3.5
-                                py-2
+                                border border-white/20
+                                bg-black/25
+                                px-3.5 py-2
                                 backdrop-blur-xl
                             "
                         >
@@ -200,7 +273,10 @@ function TourRow({
                                 aria-hidden="true"
                             />
 
-                            {tour.destinationsCount} destinations
+                            {tour.destinations.length}{" "}
+                            {tour.destinations.length === 1
+                                ? "destination"
+                                : "destinations"}
                         </span>
                     </div>
                 </div>
@@ -218,8 +294,7 @@ function TourRow({
                 <div
                     className="
                         flex
-                        items-center
-                        gap-3
+                        items-center gap-3
                         text-[10px]
                         font-bold
                         uppercase
@@ -227,14 +302,7 @@ function TourRow({
                         text-brand-600
                     "
                 >
-                    <span
-                        className="
-                            block
-                            h-px
-                            w-10
-                            bg-brand-gold
-                        "
-                    />
+                    <span className="block h-px w-10 bg-brand-gold" />
 
                     Featured Journey
                 </div>
@@ -265,105 +333,107 @@ function TourRow({
                         text-slate-600
                     "
                 >
-                    {tour.description}
+                    {tour.shortDescription ||
+                        tour.description}
                 </p>
 
-                <div
-                    className="
-                        mt-6
-                        flex
-                        flex-wrap
-                        gap-2
-                    "
-                >
-                    {tour.highlights.map(
-                        (highlight) => (
-                            <span
-                                key={highlight}
-                                className="
-                                    inline-flex
-                                    items-center
-                                    gap-1.5
-                                    rounded-full
-                                    border
-                                    border-brand-500/10
-                                    bg-brand-50
-                                    px-3.5
-                                    py-2
-                                    text-[11px]
-                                    font-semibold
-                                    text-brand-800
-                                "
-                            >
-                                <Check
-                                    size={13}
-                                    aria-hidden="true"
-                                />
-
-                                {highlight}
-                            </span>
-                        )
-                    )}
-                </div>
-
-                <div className="mt-7">
-                    <p
-                        className="
-                            text-[10px]
-                            font-bold
-                            uppercase
-                            tracking-[0.17em]
-                            text-slate-400
-                        "
-                    >
-                        Tour Route
-                    </p>
-
+                {highlights.length > 0 && (
                     <div
                         className="
-                            mt-3
-                            flex
-                            flex-wrap
-                            items-center
-                            gap-x-2
-                            gap-y-2
-                            text-sm
-                            font-semibold
-                            text-slate-600
+                            mt-6
+                            flex flex-wrap
+                            gap-2
                         "
                     >
-                        {tour.route.map(
+                        {highlights.map(
                             (
-                                destination,
-                                routeIndex
+                                highlight,
+                                highlightIndex
                             ) => (
                                 <span
-                                    key={destination}
+                                    key={`${highlight}-${highlightIndex}`}
                                     className="
                                         inline-flex
-                                        items-center
-                                        gap-2
+                                        items-center gap-1.5
+                                        rounded-full
+                                        border
+                                        border-brand-500/10
+                                        bg-brand-50
+                                        px-3.5 py-2
+                                        text-[11px]
+                                        font-semibold
+                                        text-brand-800
                                     "
                                 >
-                                    {destination}
+                                    <Check
+                                        size={13}
+                                        aria-hidden="true"
+                                    />
 
-                                    {routeIndex <
-                                    tour.route.length -
-                                    1 ? (
-                                        <span
-                                            aria-hidden="true"
-                                            className="
-                                                size-1
-                                                rounded-full
-                                                bg-brand-gold
-                                            "
-                                        />
-                                    ) : null}
+                                    {highlight}
                                 </span>
                             )
                         )}
                     </div>
-                </div>
+                )}
+
+                {route.length > 0 && (
+                    <div className="mt-7">
+                        <p
+                            className="
+                                text-[10px]
+                                font-bold
+                                uppercase
+                                tracking-[0.17em]
+                                text-slate-400
+                            "
+                        >
+                            Tour Route
+                        </p>
+
+                        <div
+                            className="
+                                mt-3
+                                flex flex-wrap
+                                items-center
+                                gap-x-2 gap-y-2
+                                text-sm
+                                font-semibold
+                                text-slate-600
+                            "
+                        >
+                            {route.map(
+                                (
+                                    destination,
+                                    routeIndex
+                                ) => (
+                                    <span
+                                        key={`${destination}-${routeIndex}`}
+                                        className="
+                                            inline-flex
+                                            items-center gap-2
+                                        "
+                                    >
+                                        {destination}
+
+                                        {routeIndex <
+                                        route.length -
+                                        1 ? (
+                                            <span
+                                                aria-hidden="true"
+                                                className="
+                                                    size-1
+                                                    rounded-full
+                                                    bg-brand-gold
+                                                "
+                                            />
+                                        ) : null}
+                                    </span>
+                                )
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 <div
                     className="
@@ -393,7 +463,9 @@ function TourRow({
                                     text-slate-400
                                 "
                             >
-                                Starting Price
+                                {tour.price === null
+                                    ? "Pricing"
+                                    : tour.priceType}
                             </p>
 
                             <p
@@ -404,17 +476,12 @@ function TourRow({
                                     text-brand-800
                                 "
                             >
-                                {tour.priceLabel}
+                                {formatPrice(tour)}
                             </p>
 
-                            <p
-                                className="
-                                    mt-1
-                                    text-[11px]
-                                    text-slate-400
-                                "
-                            >
-                                Per person • Customisable
+                            <p className="mt-1 text-[11px] text-slate-400">
+                                Final price depends on
+                                travel dates and group size
                             </p>
                         </div>
 
@@ -426,7 +493,7 @@ function TourRow({
                             "
                         >
                             <Link
-                                href={`/plan-your-tour?tour=${tour.slug}`}
+                                href="/#custom-tour"
                                 className="
                                     inline-flex
                                     min-h-12
@@ -450,7 +517,7 @@ function TourRow({
                             </Link>
 
                             <Link
-                                href={`/tours/${tour.slug}`}
+                                href={`/sri-lanka-tours/${tour.slug}`}
                                 className="
                                     group/button
                                     inline-flex
@@ -492,8 +559,32 @@ function TourRow({
 }
 
 export async function FeaturedTours() {
+    let tours: WebsiteTourPackage[] =
+        [];
+
+    try {
+        tours =
+            await getTours();
+    } catch (error) {
+        console.error(
+            "[Homepage Featured Tours]",
+            error
+        );
+    }
+
     const featuredTours =
-        await getFeaturedTours();
+        tours
+            .filter(
+                (tour) =>
+                    tour.featured
+            )
+            .slice(0, 3);
+
+    const displayedTours =
+        featuredTours.length > 0
+            ? featuredTours
+            : tours.slice(0, 3);
+
     return (
         <section
             id="featured-tours"
@@ -551,7 +642,7 @@ export async function FeaturedTours() {
                     />
 
                     <Link
-                        href="/tours"
+                        href="/sri-lanka-tours"
                         className="
                             group
                             inline-flex
@@ -562,8 +653,7 @@ export async function FeaturedTours() {
                             border
                             border-brand-500/15
                             bg-white
-                            px-5
-                            py-3
+                            px-5 py-3
                             text-sm
                             font-bold
                             text-brand-800
@@ -589,22 +679,51 @@ export async function FeaturedTours() {
                     </Link>
                 </div>
 
-                <div
-                    className="
-                        mt-12
-                        space-y-7
-                    "
-                >
-                    {featuredTours.map(
-                        (tour, index) => (
-                            <TourRow
-                                key={tour.slug}
-                                tour={tour}
-                                index={index}
-                            />
-                        )
-                    )}
-                </div>
+                {displayedTours.length > 0 ? (
+                    <div className="mt-12 space-y-7">
+                        {displayedTours.map(
+                            (
+                                tour,
+                                index
+                            ) => (
+                                <TourRow
+                                    key={tour.id}
+                                    tour={tour}
+                                    index={index}
+                                />
+                            )
+                        )}
+                    </div>
+                ) : (
+                    <div
+                        className="
+                            mt-12
+                            rounded-[2rem]
+                            border
+                            border-dashed
+                            border-slate-300
+                            bg-slate-50
+                            px-6 py-16
+                            text-center
+                        "
+                    >
+                        <Compass
+                            size={48}
+                            className="mx-auto text-brand-600"
+                            aria-hidden="true"
+                        />
+
+                        <h3 className="mt-5 font-display text-3xl font-semibold text-slate-900">
+                            Featured journeys are being prepared
+                        </h3>
+
+                        <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">
+                            Add an active tour package
+                            through the Dream Ceylon CRM
+                            and mark it as featured.
+                        </p>
+                    </div>
+                )}
 
                 <div
                     className="
@@ -618,8 +737,7 @@ export async function FeaturedTours() {
                         border
                         border-brand-500/10
                         bg-brand-50/70
-                        px-6
-                        py-7
+                        px-6 py-7
                         text-center
                         sm:flex-row
                         sm:text-left
@@ -647,12 +765,16 @@ export async function FeaturedTours() {
                                 text-slate-600
                             "
                         >
-                            Tell us your travel dates, interests, and preferred pace. We will create a private Sri Lanka itinerary around you.
+                            Tell us your travel dates,
+                            interests and preferred
+                            pace. We will create a
+                            private Sri Lanka itinerary
+                            around you.
                         </p>
                     </div>
 
                     <Link
-                        href="/plan-your-tour"
+                        href="/#custom-tour"
                         className="
                             group
                             inline-flex

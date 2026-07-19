@@ -12,6 +12,13 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { siteConfig } from "@/lib/site";
 
+
+import {
+  FloatingContact,
+} from "@/components/layout/FloatingContact";
+import {
+  TravelAssistant,
+} from "@/components/chat/TravelAssistant";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -109,6 +116,13 @@ export default function RootLayout({
       <main>{children}</main>
 
       <Footer />
+
+
+
+      <FloatingContact />
+
+
+      <TravelAssistant />
       </body>
       </html>
   );
