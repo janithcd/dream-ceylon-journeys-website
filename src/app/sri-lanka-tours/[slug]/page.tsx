@@ -1,11 +1,7 @@
-import type {
-    Metadata,
-} from "next";
+import type { Metadata } from "next";
 
 import Link from "next/link";
-import {
-    notFound,
-} from "next/navigation";
+import { notFound } from "next/navigation";
 
 import {
     ArrowLeft,
@@ -14,16 +10,17 @@ import {
     CalendarDays,
     Check,
     CircleDollarSign,
-    Clock3,
     Compass,
     MapPin,
-    MessageCircle,
-    Route,
     ShieldCheck,
     Sparkles,
     Utensils,
     X,
 } from "lucide-react";
+
+import {
+    TourInquiryButton,
+} from "@/components/tours/TourInquiryButton";
 
 import {
     getTourBySlug,
@@ -32,14 +29,8 @@ import {
 } from "@/lib/tours";
 
 const siteUrl =
-    process.env
-        .NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
     "http://localhost:3000";
-
-const whatsappNumber =
-    process.env
-        .NEXT_PUBLIC_WHATSAPP_NUMBER ||
-    "94775124645";
 
 type TourPageProps = {
     params: Promise<{
@@ -62,9 +53,7 @@ function formatPrice(
                 currency:
                     tour.currency ||
                     "USD",
-
-                maximumFractionDigits:
-                    0,
+                maximumFractionDigits: 0,
             }
         ).format(tour.price);
     } catch {
@@ -82,26 +71,6 @@ function getTourDescription(
     );
 }
 
-function buildWhatsAppUrl(
-    tour: WebsiteTourPackage
-): string {
-    const message = [
-        "Hello Dream Ceylon Journeys,",
-        "",
-        `I am interested in the "${tour.title}" tour package.`,
-        `Duration: ${tour.durationLabel}`,
-        "",
-        "Please send me more information and a quotation.",
-    ].join("\n");
-
-    return `https://wa.me/${whatsappNumber.replace(
-        /\D/g,
-        ""
-    )}?text=${encodeURIComponent(
-        message
-    )}`;
-}
-
 function TourHeroImage({
                            tour,
                        }: {
@@ -116,7 +85,7 @@ function TourHeroImage({
     }
 
     return (
-        // Image URL is supplied dynamically by the CRM.
+        // The image URL is supplied dynamically by the CRM.
         // eslint-disable-next-line @next/next/no-img-element
         <img
             src={tour.imageUrl}
@@ -149,9 +118,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({
                                            params,
                                        }: TourPageProps): Promise<Metadata> {
-    const {
-        slug,
-    } = await params;
+    const { slug } =
+        await params;
 
     try {
         const tour =
@@ -210,7 +178,6 @@ export async function generateMetadata({
                             {
                                 url:
                                 tour.imageUrl,
-
                                 alt:
                                 tour.title,
                             },
@@ -244,6 +211,7 @@ export async function generateMetadata({
         return {
             title:
                 "Sri Lanka Tour Package",
+
             description:
                 "Explore a private Sri Lanka tour with Dream Ceylon Journeys.",
         };
@@ -253,9 +221,8 @@ export async function generateMetadata({
 export default async function TourDetailsPage({
                                                   params,
                                               }: TourPageProps) {
-    const {
-        slug,
-    } = await params;
+    const { slug } =
+        await params;
 
     let tour:
         WebsiteTourPackage | null =
@@ -279,11 +246,6 @@ export default async function TourDetailsPage({
 
     const canonicalUrl =
         `${siteUrl}/sri-lanka-tours/${tour.slug}`;
-
-    const whatsappUrl =
-        buildWhatsAppUrl(
-            tour
-        );
 
     const tourJsonLd = {
         "@context":
@@ -502,18 +464,32 @@ export default async function TourDetailsPage({
                         </p>
 
                         <div className="mt-9 flex flex-wrap gap-4">
-                            <a
-                                href={
-                                    whatsappUrl
+                            <TourInquiryButton
+                                packageId={
+                                    tour.id
                                 }
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-2 rounded-full bg-[#FEC52E] px-7 py-4 font-bold text-[#173F3B] shadow-lg transition hover:-translate-y-0.5 hover:bg-white"
-                            >
-                                <MessageCircle className="h-5 w-5" />
-
-                                Request This Tour
-                            </a>
+                                packageTitle={
+                                    tour.title
+                                }
+                                packageDuration={
+                                    tour.durationLabel
+                                }
+                                label="Request This Tour"
+                                className="
+                                    inline-flex
+                                    items-center
+                                    gap-2
+                                    rounded-full
+                                    bg-[#FEC52E]
+                                    px-7 py-4
+                                    font-bold
+                                    text-[#173F3B]
+                                    shadow-lg
+                                    transition
+                                    hover:-translate-y-0.5
+                                    hover:bg-white
+                                "
+                            />
 
                             <Link
                                 href="/#custom-tour"
@@ -735,18 +711,32 @@ export default async function TourDetailsPage({
                             </div>
                         </div>
 
-                        <a
-                            href={
-                                whatsappUrl
+                        <TourInquiryButton
+                            packageId={
+                                tour.id
                             }
-                            target="_blank"
-                            rel="noreferrer"
-                            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#C62D52] px-6 py-4 font-bold text-white transition hover:bg-[#A92343]"
-                        >
-                            <MessageCircle className="h-5 w-5" />
-
-                            Request a Quotation
-                        </a>
+                            packageTitle={
+                                tour.title
+                            }
+                            packageDuration={
+                                tour.durationLabel
+                            }
+                            label="Request a Quotation"
+                            className="
+                                mt-6
+                                flex w-full
+                                items-center
+                                justify-center
+                                gap-2
+                                rounded-full
+                                bg-[#C62D52]
+                                px-6 py-4
+                                font-bold
+                                text-white
+                                transition
+                                hover:bg-[#A92343]
+                            "
+                        />
 
                         <Link
                             href="/#custom-tour"
@@ -896,8 +886,7 @@ export default async function TourDetailsPage({
                                                     0 && (
                                                         <div className="mt-6">
                                                             <h4 className="font-bold text-slate-900">
-                                                                Planned
-                                                                activities
+                                                                Planned activities
                                                             </h4>
 
                                                             <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -1153,18 +1142,31 @@ export default async function TourDetailsPage({
                         </p>
 
                         <div className="mt-8 flex flex-wrap gap-4">
-                            <a
-                                href={
-                                    whatsappUrl
+                            <TourInquiryButton
+                                packageId={
+                                    tour.id
                                 }
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-2 rounded-full bg-[#FEC52E] px-7 py-4 font-bold text-[#173F3B] transition hover:-translate-y-0.5 hover:bg-white"
-                            >
-                                <MessageCircle className="h-5 w-5" />
-
-                                Discuss This Tour
-                            </a>
+                                packageTitle={
+                                    tour.title
+                                }
+                                packageDuration={
+                                    tour.durationLabel
+                                }
+                                label="Discuss This Tour"
+                                className="
+                                    inline-flex
+                                    items-center
+                                    gap-2
+                                    rounded-full
+                                    bg-[#FEC52E]
+                                    px-7 py-4
+                                    font-bold
+                                    text-[#173F3B]
+                                    transition
+                                    hover:-translate-y-0.5
+                                    hover:bg-white
+                                "
+                            />
 
                             <Link
                                 href="/#custom-tour"
