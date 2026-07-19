@@ -3,301 +3,289 @@ import Link from "next/link";
 
 import {
     ArrowRight,
-    ArrowUpRight,
     MapPin,
 } from "lucide-react";
 
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+    Container,
+} from "@/components/ui/Container";
+
+import {
+    SectionHeading,
+} from "@/components/ui/SectionHeading";
 
 import {
     getPopularDestinations,
     type Destination,
 } from "@/data/destinations";
 
-type CardVariant =
-    | "featured"
-    | "compact"
-    | "standard";
-
 function DestinationCard({
                              destination,
-                             variant,
-                             index,
+                             priority,
                          }: {
     destination: Destination;
-    variant: CardVariant;
-    index: number;
+    priority: boolean;
 }) {
-    const featured =
-        variant === "featured";
-
-    const compact =
-        variant === "compact";
-
-    const cardHeight = featured
-        ? `
-            min-h-[470px]
-            sm:min-h-[540px]
-            lg:min-h-[625px]
-          `
-        : compact
-            ? `
-            min-h-[310px]
-            sm:min-h-[340px]
-            lg:min-h-[300px]
-          `
-            : `
-            min-h-[370px]
-            lg:min-h-[410px]
-          `;
-
-    const titleSize = featured
-        ? `
-            text-5xl
-            sm:text-6xl
-            lg:text-7xl
-          `
-        : compact
-            ? `
-            text-4xl
-            lg:text-[42px]
-          `
-            : `
-            text-4xl
-            sm:text-5xl
-          `;
-
     return (
-        <Link
-            href={`/destinations/${destination.slug}`}
-            className={[
-                "group relative isolate block overflow-hidden",
-                "rounded-[2rem] bg-slate-900",
-                "shadow-[0_18px_55px_rgba(18,35,32,0.12)]",
-                "transition-all duration-500",
-                "hover:-translate-y-1.5",
-                "hover:shadow-[0_28px_80px_rgba(18,35,32,0.22)]",
-                cardHeight,
-            ].join(" ")}
-            aria-label={`Explore ${destination.name}, Sri Lanka`}
+        <article
+            className="
+                group
+                overflow-hidden
+                rounded-[1.5rem]
+                border border-slate-200
+                bg-white
+                shadow-[0_12px_35px_rgba(25,45,42,0.06)]
+                transition-all duration-500
+                hover:-translate-y-1.5
+                hover:border-brand-500/25
+                hover:shadow-[0_22px_55px_rgba(25,45,42,0.13)]
+            "
         >
-            <Image
-                src={destination.image}
-                alt={destination.imageAlt}
-                fill
-                sizes={
-                    featured
-                        ? "(max-width: 1023px) 100vw, 58vw"
-                        : compact
-                            ? "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 42vw"
-                            : "(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
-                }
-                className="
-                    object-cover
-                    transition-transform
-                    duration-[1200ms]
-                    ease-out
-                    group-hover:scale-[1.07]
-                "
-            />
-
-            <div
-                aria-hidden="true"
-                className="
-                    absolute inset-0
-                    bg-gradient-to-t
-                    from-black/95
-                    via-black/40
-                    to-black/5
-                "
-            />
-
-            <div
-                aria-hidden="true"
-                className="
-                    absolute inset-0
-                    bg-gradient-to-r
-                    from-black/35
-                    via-transparent
-                    to-transparent
-                "
-            />
-
-            <div
-                aria-hidden="true"
-                className="
-                    absolute inset-0
-                    bg-[radial-gradient(circle_at_top_right,rgba(254,197,46,0.14),transparent_34%)]
-                    opacity-0
-                    transition-opacity
-                    duration-500
-                    group-hover:opacity-100
-                "
-            />
-
-            <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5 sm:p-6">
-                <span
+            <Link
+                href={`/sri-lanka-destinations/${destination.slug}`}
+                className="block h-full"
+                aria-label={`Explore ${destination.name}, Sri Lanka`}
+            >
+                {/* Image */}
+                <div
                     className="
-                        inline-flex items-center
-                        rounded-full
-                        border border-white/20
-                        bg-black/15
-                        px-3.5 py-2
-                        text-[10px] font-bold
-                        uppercase tracking-[0.17em]
-                        text-white
-                        backdrop-blur-xl
+                        relative
+                        aspect-[4/3]
+                        overflow-hidden
+                        bg-slate-100
                     "
                 >
-                    {destination.tag}
-                </span>
-
-                <div className="flex items-center gap-3">
-                    <span className="hidden font-display text-sm font-semibold text-white/60 sm:block">
-                        {String(index + 1).padStart(
-                            2,
-                            "0"
-                        )}
-                    </span>
-
-                    <span
+                    <Image
+                        src={
+                            destination.image
+                        }
+                        alt={
+                            destination.imageAlt
+                        }
+                        fill
+                        priority={
+                            priority
+                        }
+                        sizes="
+                            (max-width: 767px) 100vw,
+                            (max-width: 1279px) 50vw,
+                            33vw
+                        "
                         className="
-                            inline-flex size-11
-                            items-center justify-center
-                            rounded-full
-                            border border-white/20
-                            bg-white/10
-                            text-white
-                            backdrop-blur-xl
-                            transition-all duration-300
-                            group-hover:rotate-6
-                            group-hover:border-brand-gold
-                            group-hover:bg-brand-gold
-                            group-hover:text-slate-900
+                            object-cover
+                            transition-transform
+                            duration-[1000ms]
+                            ease-out
+                            group-hover:scale-[1.06]
+                        "
+                    />
+
+                    <div
+                        aria-hidden="true"
+                        className="
+                            absolute inset-0
+                            bg-gradient-to-t
+                            from-black/75
+                            via-black/10
+                            to-transparent
+                        "
+                    />
+
+                    {/* Category */}
+                    <div
+                        className="
+                            absolute left-5 top-5
                         "
                     >
-                        <ArrowUpRight
-                            size={19}
-                            aria-hidden="true"
-                        />
-                    </span>
+                        <span
+                            className="
+                                inline-flex
+                                rounded-full
+                                border border-white/25
+                                bg-black/20
+                                px-3 py-1.5
+                                text-[10px]
+                                font-bold uppercase
+                                tracking-[0.14em]
+                                text-white
+                                backdrop-blur-md
+                            "
+                        >
+                            {
+                                destination.tag
+                            }
+                        </span>
+                    </div>
+
+                    {/* Destination name */}
+                    <div
+                        className="
+                            absolute inset-x-0
+                            bottom-0 p-5
+                            text-white
+                        "
+                    >
+                        <div
+                            className="
+                                flex items-center
+                                gap-1.5
+                                text-xs font-medium
+                                text-white/80
+                            "
+                        >
+                            <MapPin
+                                size={14}
+                                className="text-brand-gold"
+                                aria-hidden="true"
+                            />
+
+                            {
+                                destination.region
+                            }
+                        </div>
+
+                        <h3
+                            className="
+                                mt-2
+                                font-display
+                                text-3xl
+                                font-semibold
+                                leading-tight
+                                tracking-[-0.03em]
+                                text-white
+                            "
+                        >
+                            {
+                                destination.name
+                            }
+                        </h3>
+                    </div>
                 </div>
-            </div>
 
-            <div
-                className={[
-                    "absolute inset-x-0 bottom-0",
-                    featured
-                        ? "p-7 sm:p-9 lg:p-10"
-                        : "p-6 sm:p-7",
-                ].join(" ")}
-            >
-                <div
-                    className="
-                        flex items-center gap-2
-                        text-[10px] font-bold
-                        uppercase tracking-[0.16em]
-                        text-white/70
-                        sm:text-[11px]
-                    "
-                >
-                    <MapPin
-                        size={15}
-                        className="text-brand-gold"
-                        aria-hidden="true"
-                    />
+                {/* Content */}
+                <div className="p-5 sm:p-6">
+                    <p
+                        className="
+                            min-h-[84px]
+                            text-sm leading-7
+                            text-slate-600
+                        "
+                    >
+                        {
+                            destination.description
+                        }
+                    </p>
 
-                    {destination.region}
+                    <div
+                        className="
+                            mt-5
+                            rounded-xl
+                            bg-brand-50
+                            px-4 py-3
+                        "
+                    >
+                        <span
+                            className="
+                                block
+                                text-[10px]
+                                font-bold uppercase
+                                tracking-[0.13em]
+                                text-brand-700
+                            "
+                        >
+                            Best for
+                        </span>
+
+                        <p
+                            className="
+                                mt-1
+                                text-sm
+                                font-medium
+                                leading-6
+                                text-slate-700
+                            "
+                        >
+                            {
+                                destination.bestFor
+                            }
+                        </p>
+                    </div>
+
+                    <div
+                        className="
+                            mt-5
+                            flex items-center
+                            justify-between
+                            border-t
+                            border-slate-100
+                            pt-5
+                        "
+                    >
+                        <span
+                            className="
+                                text-sm
+                                font-bold
+                                text-brand-700
+                            "
+                        >
+                            Explore destination
+                        </span>
+
+                        <span
+                            className="
+                                inline-flex
+                                size-9
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-brand-500
+                                text-white
+                                transition-all
+                                duration-300
+                                group-hover:translate-x-1
+                                group-hover:bg-brand-600
+                            "
+                        >
+                            <ArrowRight
+                                size={16}
+                                aria-hidden="true"
+                            />
+                        </span>
+                    </div>
                 </div>
-
-                <h3
-                    className={[
-                        "mt-3 font-display font-semibold",
-                        "leading-[0.98] tracking-[-0.04em]",
-                        "text-white",
-                        titleSize,
-                    ].join(" ")}
-                >
-                    {destination.name}
-                </h3>
-
-                <p
-                    className={[
-                        "mt-4 max-w-xl text-white/82",
-                        compact
-                            ? "text-sm leading-6"
-                            : "text-sm leading-7 sm:text-base",
-                    ].join(" ")}
-                >
-                    {destination.description}
-                </p>
-
-                <div
-                    className="
-                        mt-5
-                        inline-flex items-center gap-2
-                        text-sm font-bold
-                        text-brand-gold
-                        transition-all duration-300
-                        group-hover:gap-3
-                    "
-                >
-                    Explore destination
-
-                    <ArrowRight
-                        size={17}
-                        aria-hidden="true"
-                    />
-                </div>
-            </div>
-
-            <div
-                aria-hidden="true"
-                className="
-                    pointer-events-none
-                    absolute inset-0
-                    rounded-[2rem]
-                    ring-1 ring-inset
-                    ring-white/10
-                    transition duration-300
-                    group-hover:ring-white/30
-                "
-            />
-        </Link>
+            </Link>
+        </article>
     );
 }
 
 export async function PopularDestinations() {
     const destinations =
-        await getPopularDestinations(6);
-
-    const featuredDestination =
-        destinations[0];
-
-    const sideDestinations =
-        destinations.slice(1, 3);
-
-    const lowerDestinations =
-        destinations.slice(3, 6);
+        await getPopularDestinations(
+            6
+        );
 
     return (
         <section
             id="popular-destinations"
             className="
-                relative overflow-hidden
+                relative
+                overflow-hidden
                 bg-[#fdfbf8]
-                py-20 sm:py-24 lg:py-28
+                py-20
+                sm:py-24
+                lg:py-28
             "
         >
+            {/* Soft background decoration */}
             <div
                 aria-hidden="true"
                 className="
                     pointer-events-none
-                    absolute -right-52 top-12
-                    size-[500px]
+                    absolute -right-48
+                    top-12
+                    size-[460px]
                     rounded-full
-                    bg-brand-100/55
+                    bg-brand-100/40
                     blur-3xl
                 "
             />
@@ -306,52 +294,54 @@ export async function PopularDestinations() {
                 aria-hidden="true"
                 className="
                     pointer-events-none
-                    absolute -left-52 bottom-10
-                    size-[430px]
+                    absolute -left-48
+                    bottom-0
+                    size-[420px]
                     rounded-full
                     bg-brand-gold/10
                     blur-3xl
                 "
             />
 
-            <Container className="relative max-w-[1440px]">
+            <Container className="relative max-w-[1400px]">
+                {/* Heading */}
                 <div
                     className="
-                        grid gap-8
-                        lg:grid-cols-[minmax(0,760px)_auto]
+                        grid gap-7
+                        lg:grid-cols-[minmax(0,780px)_auto]
                         lg:items-end
                         lg:justify-between
                     "
                 >
                     <SectionHeading
                         eyebrow="Explore Sri Lanka"
-                        title="Iconic places. Remarkable experiences."
-                        description="Explore Sri Lanka’s ancient cities, misty hill country, wildlife-rich national parks, tropical beaches, and culturally significant destinations."
+                        title="Iconic destinations for an unforgettable journey"
+                        description="Discover ancient kingdoms, misty hill country, wildlife-rich national parks, historic coastal cities, and tropical beaches."
                     />
 
                     <Link
-                        href="/destinations"
+                        href="/sri-lanka-destinations"
                         className="
                             group
                             inline-flex w-fit
-                            shrink-0 items-center gap-2
+                            items-center gap-2
                             rounded-full
-                            border border-brand-500/15
+                            border border-brand-500/20
                             bg-white
                             px-5 py-3
                             text-sm font-bold
                             text-brand-800
-                            shadow-[0_10px_30px_rgba(0,141,134,0.08)]
+                            shadow-sm
                             transition-all duration-300
                             hover:-translate-y-0.5
-                            hover:border-brand-500/35
+                            hover:border-brand-500/40
                             hover:bg-brand-50
                         "
                     >
                         View all destinations
 
                         <ArrowRight
-                            size={18}
+                            size={17}
                             aria-hidden="true"
                             className="
                                 transition-transform
@@ -362,28 +352,18 @@ export async function PopularDestinations() {
                     </Link>
                 </div>
 
-                <div className="mt-12 grid gap-5 lg:grid-cols-12">
-                    {featuredDestination ? (
-                        <div className="lg:col-span-7">
-                            <DestinationCard
-                                destination={
-                                    featuredDestination
-                                }
-                                variant="featured"
-                                index={0}
-                            />
-                        </div>
-                    ) : null}
-
+                {/* Destination cards */}
+                {destinations.length >
+                0 ? (
                     <div
                         className="
-                            grid gap-5
-                            sm:grid-cols-2
-                            lg:col-span-5
-                            lg:grid-cols-1
+                            mt-12
+                            grid gap-6
+                            md:grid-cols-2
+                            xl:grid-cols-3
                         "
                     >
-                        {sideDestinations.map(
+                        {destinations.map(
                             (
                                 destination,
                                 index
@@ -395,39 +375,52 @@ export async function PopularDestinations() {
                                     destination={
                                         destination
                                     }
-                                    variant="compact"
-                                    index={index + 1}
+                                    priority={
+                                        index <
+                                        3
+                                    }
                                 />
                             )
                         )}
                     </div>
-                </div>
+                ) : (
+                    <div
+                        className="
+                            mt-12
+                            rounded-[1.5rem]
+                            border
+                            border-dashed
+                            border-slate-300
+                            bg-white
+                            px-6 py-16
+                            text-center
+                        "
+                    >
+                        <h3
+                            className="
+                                text-xl
+                                font-bold
+                                text-slate-900
+                            "
+                        >
+                            Destinations are being prepared
+                        </h3>
 
-                <div
-                    className="
-                        mt-5 grid gap-5
-                        md:grid-cols-2
-                        xl:grid-cols-3
-                    "
-                >
-                    {lowerDestinations.map(
-                        (
-                            destination,
-                            index
-                        ) => (
-                            <DestinationCard
-                                key={
-                                    destination.slug
-                                }
-                                destination={
-                                    destination
-                                }
-                                variant="standard"
-                                index={index + 3}
-                            />
-                        )
-                    )}
-                </div>
+                        <p
+                            className="
+                                mx-auto mt-3
+                                max-w-lg
+                                text-sm
+                                leading-7
+                                text-slate-600
+                            "
+                        >
+                            Destination information
+                            will appear here once it
+                            becomes available.
+                        </p>
+                    </div>
+                )}
             </Container>
         </section>
     );
