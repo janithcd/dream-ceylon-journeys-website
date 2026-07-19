@@ -19,7 +19,7 @@ export type FeaturedTour = {
 
 const fallbackImages = [
     "/images/tours/grand-sri-lanka-discovery.jpg",
-    "/images/tours/culture-nature-escape.jpg",
+    "/images/tours/culture-nature-escape.webp",
     "/images/tours/wildlife-coastal-adventure.jpg",
 ];
 
