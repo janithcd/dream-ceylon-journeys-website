@@ -171,10 +171,8 @@ function VehicleCard({
     vehicle: WebsiteVehicle;
     index: number;
 }) {
-    const inquiryUrl =
-        `/plan-your-tour?vehicle=${encodeURIComponent(
-            vehicle.slug
-        )}`;
+    const detailsUrl =
+        `/vehicles/${vehicle.slug}`;
 
     return (
         <article
@@ -499,7 +497,7 @@ function VehicleCard({
 
                             <Link
                                 href={
-                                    inquiryUrl
+                                    detailsUrl
                                 }
                                 className="
                                     inline-flex
