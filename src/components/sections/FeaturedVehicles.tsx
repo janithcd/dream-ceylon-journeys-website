@@ -1,41 +1,159 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import {
     ArrowRight,
+    CarFront,
     Check,
     Luggage,
     Snowflake,
     UsersRound,
 } from "lucide-react";
 
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+    Container,
+} from "@/components/ui/Container";
+
+import {
+    SectionHeading,
+} from "@/components/ui/SectionHeading";
 
 import {
     getFeaturedVehicles,
-    type FeaturedVehicle,
-} from "@/data/featured-vehicles";
+    type WebsiteVehicle,
+} from "@/lib/vehicles";
 
 function formatPrice(
-    currency: string,
-    price: number
+    vehicle: WebsiteVehicle
 ): string {
-    return new Intl.NumberFormat(
-        "en-US",
-        {
-            style: "currency",
-            currency,
-            maximumFractionDigits: 0,
-        }
-    ).format(price);
+    if (
+        vehicle.pricePerDay === null
+    ) {
+        return "Request quotation";
+    }
+
+    try {
+        return new Intl.NumberFormat(
+            "en-US",
+            {
+                style: "currency",
+                currency:
+                    vehicle.currency ||
+                    "USD",
+                maximumFractionDigits: 0,
+            }
+        ).format(
+            vehicle.pricePerDay
+        );
+    } catch {
+        return `${vehicle.currency} ${vehicle.pricePerDay.toLocaleString()}`;
+    }
+}
+
+function VehicleImage({
+                          vehicle,
+                      }: {
+    vehicle: WebsiteVehicle;
+}) {
+    if (!vehicle.imageUrl) {
+        return (
+            <div
+                className="
+                    absolute inset-0 z-10
+                    flex items-center
+                    justify-center
+                    bg-gradient-to-br
+                    from-[#eef5f2]
+                    via-[#f7faf9]
+                    to-[#e4efeb]
+                    px-6
+                    text-center
+                "
+            >
+                <div>
+                    <div
+                        className="
+                            mx-auto
+                            flex size-20
+                            items-center
+                            justify-center
+                            rounded-[1.75rem]
+                            bg-white
+                            text-brand-700
+                            shadow-[0_18px_45px_rgba(0,141,134,0.12)]
+                        "
+                    >
+                        <CarFront
+                            size={40}
+                            strokeWidth={1.7}
+                            aria-hidden="true"
+                        />
+                    </div>
+
+                    <p
+                        className="
+                            mt-5
+                            text-xs
+                            font-bold
+                            uppercase
+                            tracking-[0.18em]
+                            text-brand-700
+                        "
+                    >
+                        Dream Ceylon Journeys
+                    </p>
+
+                    <p
+                        className="
+                            mt-2
+                            font-display
+                            text-2xl
+                            font-semibold
+                            text-slate-900
+                        "
+                    >
+                        {vehicle.name}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            className="
+                absolute inset-0 z-10
+                flex items-center
+                justify-center
+                px-5 pb-8 pt-12
+                sm:px-7
+            "
+        >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src={vehicle.imageUrl}
+                alt={`${vehicle.name} private vehicle in Sri Lanka`}
+                loading="lazy"
+                decoding="async"
+                className="
+                    block
+                    max-h-full
+                    max-w-full
+                    object-contain
+                    transition-all
+                    duration-500
+                    group-hover:-translate-y-2
+                    group-hover:scale-[1.025]
+                "
+            />
+        </div>
+    );
 }
 
 function VehicleCard({
                          vehicle,
                          index,
                      }: {
-    vehicle: FeaturedVehicle;
+    vehicle: WebsiteVehicle;
     index: number;
 }) {
     return (
@@ -48,13 +166,14 @@ function VehicleCard({
                 border border-slate-200/90
                 bg-white
                 shadow-[0_16px_45px_rgba(24,40,38,0.06)]
-                transition-all duration-400
+                transition-all
+                duration-500
                 hover:-translate-y-1
                 hover:border-brand-500/20
                 hover:shadow-[0_22px_60px_rgba(24,40,38,0.10)]
             "
         >
-            {/* Vehicle image area */}
+            {/* Vehicle image */}
             <div
                 className="
                     relative
@@ -68,47 +187,39 @@ function VehicleCard({
                 <div
                     aria-hidden="true"
                     className="
-                        absolute inset-x-[12%]
+                        absolute
+                        inset-x-[12%]
                         bottom-[42px]
                         h-8
                         rounded-[50%]
                         bg-black/15
                         blur-xl
-                        transition-all duration-500
+                        transition-all
+                        duration-500
                         group-hover:scale-90
-                        group-hover:bg-black/12
+                        group-hover:bg-black/10
                     "
                 />
 
-                <Image
-                    src={vehicle.image}
-                    alt={vehicle.imageAlt}
-                    fill
-                    sizes="
-                        (max-width: 767px) 100vw,
-                        (max-width: 1279px) 50vw,
-                        33vw
-                    "
-                    className="
-                        object-contain
-                        px-5 pb-8 pt-12
-                        transition-all duration-500
-                        group-hover:-translate-y-2
-                        group-hover:scale-[1.025]
-                        sm:px-7
-                    "
+                <VehicleImage
+                    vehicle={vehicle}
                 />
 
                 <div
                     className="
-                        absolute left-5 top-5
-                        inline-flex items-center
+                        absolute
+                        left-5 top-5
+                        inline-flex
+                        items-center
                         rounded-full
-                        border border-slate-200
+                        border
+                        border-slate-200
                         bg-white/90
                         px-3.5 py-2
-                        text-[10px] font-bold
-                        uppercase tracking-[0.16em]
+                        text-[10px]
+                        font-bold
+                        uppercase
+                        tracking-[0.16em]
                         text-brand-700
                         shadow-sm
                         backdrop-blur-md
@@ -119,35 +230,48 @@ function VehicleCard({
 
                 <span
                     className="
-                        absolute right-5 top-5
+                        absolute
+                        right-5 top-5
                         font-display
-                        text-sm font-semibold
+                        text-sm
+                        font-semibold
                         tracking-[0.08em]
                         text-slate-400
                     "
                 >
-                    {String(index + 1).padStart(
+                    {String(
+                        index + 1
+                    ).padStart(
                         2,
                         "0"
                     )}
                 </span>
             </div>
 
-            {/* Vehicle information */}
+            {/* Vehicle content */}
             <div
                 className="
-                    flex flex-1 flex-col
+                    flex flex-1
+                    flex-col
                     p-6
                     sm:p-7
                     lg:p-8
                 "
             >
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                <div
+                    className="
+                        flex flex-wrap
+                        items-center
+                        gap-x-5 gap-y-2
+                    "
+                >
                     <span
                         className="
-                            inline-flex items-center
+                            inline-flex
+                            items-center
                             gap-2
-                            text-xs font-semibold
+                            text-xs
+                            font-semibold
                             text-slate-500
                         "
                     >
@@ -157,17 +281,21 @@ function VehicleCard({
                             aria-hidden="true"
                         />
 
-                        Up to {vehicle.capacity}{" "}
-                        {vehicle.capacity === 1
+                        Up to{" "}
+                        {vehicle.capacity}{" "}
+                        {vehicle.capacity ===
+                        1
                             ? "passenger"
                             : "passengers"}
                     </span>
 
                     <span
                         className="
-                            inline-flex items-center
+                            inline-flex
+                            items-center
                             gap-2
-                            text-xs font-semibold
+                            text-xs
+                            font-semibold
                             text-slate-500
                         "
                     >
@@ -185,7 +313,8 @@ function VehicleCard({
                     className="
                         mt-5
                         font-display
-                        text-3xl font-semibold
+                        text-3xl
+                        font-semibold
                         leading-tight
                         tracking-[-0.035em]
                         text-slate-900
@@ -197,56 +326,72 @@ function VehicleCard({
                 <p
                     className="
                         mt-4
-                        text-sm leading-7
+                        text-sm
+                        leading-7
                         text-slate-600
                     "
                 >
-                    {vehicle.description}
+                    {vehicle.shortDescription ||
+                        vehicle.description}
                 </p>
 
-                <div
-                    className="
-                        mt-6
-                        space-y-3
-                    "
-                >
-                    {vehicle.features
-                        .slice(0, 3)
-                        .map((feature) => (
-                            <div
-                                key={feature}
-                                className="
-                                    flex items-start
-                                    gap-3
-                                    text-sm
-                                    text-slate-600
-                                "
-                            >
-                                <span
-                                    className="
-                                        mt-0.5
-                                        inline-flex size-5
-                                        shrink-0
-                                        items-center
-                                        justify-center
-                                        rounded-full
-                                        bg-brand-50
-                                        text-brand-700
-                                    "
-                                >
-                                    <Check
-                                        size={12}
-                                        strokeWidth={2.4}
-                                        aria-hidden="true"
-                                    />
-                                </span>
+                {vehicle.features.length >
+                    0 && (
+                        <div
+                            className="
+                            mt-6
+                            space-y-3
+                        "
+                        >
+                            {vehicle.features
+                                .slice(0, 3)
+                                .map(
+                                    (
+                                        feature,
+                                        featureIndex
+                                    ) => (
+                                        <div
+                                            key={`${feature}-${featureIndex}`}
+                                            className="
+                                            flex
+                                            items-start
+                                            gap-3
+                                            text-sm
+                                            text-slate-600
+                                        "
+                                        >
+                                        <span
+                                            className="
+                                                mt-0.5
+                                                inline-flex
+                                                size-5
+                                                shrink-0
+                                                items-center
+                                                justify-center
+                                                rounded-full
+                                                bg-brand-50
+                                                text-brand-700
+                                            "
+                                        >
+                                            <Check
+                                                size={12}
+                                                strokeWidth={
+                                                    2.4
+                                                }
+                                                aria-hidden="true"
+                                            />
+                                        </span>
 
-                                <span>
-                                    {feature}
-                                </span>
-                            </div>
-                        ))}
-                </div>
+                                            <span>
+                                            {
+                                                feature
+                                            }
+                                        </span>
+                                        </div>
+                                    )
+                                )}
+                        </div>
+                    )}
 
                 <div
                     className="
@@ -275,10 +420,20 @@ function VehicleCard({
                                     text-slate-400
                                 "
                             >
-                                Starting from
+                                {vehicle.pricePerDay ===
+                                null
+                                    ? "Pricing"
+                                    : "Starting from"}
                             </p>
 
-                            <div className="mt-1 flex items-end gap-1.5">
+                            <div
+                                className="
+                                    mt-1
+                                    flex
+                                    items-end
+                                    gap-1.5
+                                "
+                            >
                                 <p
                                     className="
                                         text-2xl
@@ -287,26 +442,30 @@ function VehicleCard({
                                     "
                                 >
                                     {formatPrice(
-                                        vehicle.currency,
-                                        vehicle.pricePerDay
+                                        vehicle
                                     )}
                                 </p>
 
-                                <span
-                                    className="
-                                        pb-1
-                                        text-xs
-                                        font-medium
-                                        text-slate-400
-                                    "
-                                >
-                                    / day
-                                </span>
+                                {vehicle.pricePerDay !==
+                                    null && (
+                                        <span
+                                            className="
+                                            pb-1
+                                            text-xs
+                                            font-medium
+                                            text-slate-400
+                                        "
+                                        >
+                                        / day
+                                    </span>
+                                    )}
                             </div>
                         </div>
 
                         <Link
-                            href={`/plan-your-tour?vehicle=${vehicle.slug}`}
+                            href={`/plan-your-tour?vehicle=${encodeURIComponent(
+                                vehicle.slug
+                            )}`}
                             className="
                                 group/button
                                 inline-flex
@@ -322,7 +481,8 @@ function VehicleCard({
                                 font-bold
                                 text-white
                                 shadow-[0_10px_25px_rgba(0,141,134,0.18)]
-                                transition-all duration-300
+                                transition-all
+                                duration-300
                                 hover:-translate-y-0.5
                                 hover:bg-brand-600
                             "
@@ -352,7 +512,7 @@ function VehicleCard({
                     scale-x-0
                     bg-brand-gold
                     transition-transform
-                    duration-400
+                    duration-500
                     group-hover:scale-x-100
                 "
             />
@@ -361,8 +521,18 @@ function VehicleCard({
 }
 
 export async function FeaturedVehicles() {
-    const vehicles =
-        await getFeaturedVehicles();
+    let vehicles:
+        WebsiteVehicle[] = [];
+
+    try {
+        vehicles =
+            await getFeaturedVehicles();
+    } catch (error) {
+        console.error(
+            "[Homepage Featured Vehicles]",
+            error
+        );
+    }
 
     return (
         <section
@@ -380,7 +550,9 @@ export async function FeaturedVehicles() {
                 aria-hidden="true"
                 className="
                     pointer-events-none
-                    absolute -right-48 top-10
+                    absolute
+                    -right-48
+                    top-10
                     size-[430px]
                     rounded-full
                     bg-brand-100/45
@@ -388,7 +560,26 @@ export async function FeaturedVehicles() {
                 "
             />
 
-            <Container className="relative max-w-[1380px]">
+            <div
+                aria-hidden="true"
+                className="
+                    pointer-events-none
+                    absolute
+                    -left-52
+                    bottom-0
+                    size-[400px]
+                    rounded-full
+                    bg-brand-gold/10
+                    blur-3xl
+                "
+            />
+
+            <Container
+                className="
+                    relative
+                    max-w-[1380px]
+                "
+            >
                 <div
                     className="
                         grid gap-7
@@ -405,58 +596,139 @@ export async function FeaturedVehicles() {
 
                     <div
                         className="
-                            flex items-start
+                            flex
+                            items-start
                             gap-3
                             rounded-[1.25rem]
-                            border border-slate-200
+                            border
+                            border-slate-200
                             bg-white
                             p-5
-                            text-sm leading-7
+                            text-sm
+                            leading-7
                             text-slate-600
                         "
                     >
                         <Luggage
                             size={21}
-                            className="mt-1 shrink-0 text-brand-500"
+                            className="
+                                mt-1
+                                shrink-0
+                                text-brand-500
+                            "
                             aria-hidden="true"
                         />
 
                         <p>
-                            Vehicle recommendations are
-                            based on passenger count,
-                            luggage space, route conditions,
-                            and tour duration.
+                            Vehicle recommendations
+                            are based on passenger
+                            count, luggage space,
+                            route conditions, and tour
+                            duration.
                         </p>
                     </div>
                 </div>
 
-                <div
-                    className="
-                        mt-12
-                        grid gap-5
-                        md:grid-cols-2
-                        xl:grid-cols-3
-                    "
-                >
-                    {vehicles.map(
-                        (vehicle, index) => (
-                            <VehicleCard
-                                key={vehicle.id}
-                                vehicle={vehicle}
-                                index={index}
+                {vehicles.length > 0 ? (
+                    <div
+                        className="
+                            mt-12
+                            grid gap-5
+                            md:grid-cols-2
+                            xl:grid-cols-3
+                        "
+                    >
+                        {vehicles.map(
+                            (
+                                vehicle,
+                                index
+                            ) => (
+                                <VehicleCard
+                                    key={
+                                        vehicle.id
+                                    }
+                                    vehicle={
+                                        vehicle
+                                    }
+                                    index={
+                                        index
+                                    }
+                                />
+                            )
+                        )}
+                    </div>
+                ) : (
+                    <div
+                        className="
+                            mt-12
+                            rounded-[2rem]
+                            border
+                            border-dashed
+                            border-slate-300
+                            bg-white
+                            px-6 py-16
+                            text-center
+                        "
+                    >
+                        <div
+                            className="
+                                mx-auto
+                                flex size-20
+                                items-center
+                                justify-center
+                                rounded-[1.75rem]
+                                bg-brand-50
+                                text-brand-700
+                            "
+                        >
+                            <CarFront
+                                size={40}
+                                strokeWidth={1.7}
+                                aria-hidden="true"
                             />
-                        )
-                    )}
-                </div>
+                        </div>
+
+                        <h3
+                            className="
+                                mt-6
+                                font-display
+                                text-3xl
+                                font-semibold
+                                text-slate-900
+                            "
+                        >
+                            Vehicle options are being
+                            prepared
+                        </h3>
+
+                        <p
+                            className="
+                                mx-auto
+                                mt-3
+                                max-w-2xl
+                                leading-7
+                                text-slate-600
+                            "
+                        >
+                            Add an active vehicle
+                            through the Dream Ceylon
+                            CRM and mark it as
+                            featured to display it
+                            here.
+                        </p>
+                    </div>
+                )}
 
                 <div
                     className="
                         mt-8
                         flex flex-col
                         gap-3
-                        border-t border-slate-200
+                        border-t
+                        border-slate-200
                         pt-6
-                        text-xs leading-6
+                        text-xs
+                        leading-6
                         text-slate-500
                         sm:flex-row
                         sm:items-center
@@ -464,17 +736,21 @@ export async function FeaturedVehicles() {
                     "
                 >
                     <p>
-                        Daily rates may vary according to
-                        route, mileage, tour duration, and
-                        seasonal requirements.
+                        Daily rates may vary according
+                        to route, mileage, tour
+                        duration, and seasonal
+                        requirements.
                     </p>
 
                     <Link
                         href="/vehicles"
                         className="
-                            group inline-flex
-                            w-fit shrink-0
-                            items-center gap-2
+                            group
+                            inline-flex
+                            w-fit
+                            shrink-0
+                            items-center
+                            gap-2
                             font-bold
                             text-brand-700
                             transition-colors
