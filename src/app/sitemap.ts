@@ -153,6 +153,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url:
                 createUrl(
+                    "/gallery"
+                ),
+
+            lastModified:
+            now,
+
+            changeFrequency:
+                "weekly",
+
+            priority:
+                0.8,
+        },
+        {
+            url:
+                createUrl(
                     "/vehicles"
                 ),
 
