@@ -463,9 +463,7 @@ function VehicleCard({
                         </div>
 
                         <Link
-                            href={`/plan-your-tour?vehicle=${encodeURIComponent(
-                                vehicle.slug
-                            )}`}
+                            href={`/vehicles/${vehicle.slug}`}
                             className="
                                 group/button
                                 inline-flex
@@ -487,7 +485,7 @@ function VehicleCard({
                                 hover:bg-brand-600
                             "
                         >
-                            Request
+                            View Details
 
                             <ArrowRight
                                 size={17}
