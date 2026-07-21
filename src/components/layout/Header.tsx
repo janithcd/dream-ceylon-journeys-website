@@ -727,37 +727,7 @@ export function Header() {
                             variant="desktop"
                         />
 
-                        <a
-                            href={
-                                whatsappUrl
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={tHeader(
-                                "chatWithExpert"
-                            )}
-                            className={[
-                                "group inline-flex min-h-10 items-center justify-center gap-2 rounded-full",
-                                "border border-white/90 bg-white/[0.68] px-3 text-[12px] font-semibold text-brand-800",
-                                "shadow-[inset_0_1px_0_rgba(255,255,255,1),0_8px_22px_rgba(0,141,134,0.08)] backdrop-blur-xl",
-                                "transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-500/25 hover:bg-white",
-                                "min-[1500px]:px-4 min-[1500px]:text-sm",
-                            ].join(
-                                " "
-                            )}
-                        >
-                            <MessageCircle
-                                size={
-                                    17
-                                }
-                                aria-hidden="true"
-                                className="transition duration-300 group-hover:scale-110"
-                            />
 
-                            {tHeader(
-                                "whatsapp"
-                            )}
-                        </a>
 
                         <Link
                             href={getLocalizedHref(

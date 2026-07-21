@@ -9,31 +9,48 @@ import {
     MapPin,
 } from "lucide-react";
 
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+    getTranslations,
+} from "next-intl/server";
 
-const highlights = [
-    {
-        icon: MapPin,
-        title: "Local Sri Lankan knowledge",
-        description:
-            "Thoughtful recommendations shaped by genuine experience of the island.",
-    },
-    {
-        icon: Compass,
-        title: "Tailor-made private journeys",
-        description:
-            "Tours designed around your interests, dates, pace, and travel style.",
-    },
-    {
-        icon: HeartHandshake,
-        title: "Personal support throughout",
-        description:
-            "Responsive assistance from your first conversation to your final transfer.",
-    },
-];
+import {
+    Container,
+} from "@/components/ui/Container";
 
-export function AboutPreview() {
+import {
+    SectionHeading,
+} from "@/components/ui/SectionHeading";
+
+const highlightDefinitions = [
+    {
+        key:
+            "localKnowledge",
+
+        icon:
+        MapPin,
+    },
+    {
+        key:
+            "tailorMade",
+
+        icon:
+        Compass,
+    },
+    {
+        key:
+            "personalSupport",
+
+        icon:
+        HeartHandshake,
+    },
+] as const;
+
+export async function AboutPreview() {
+    const t =
+        await getTranslations(
+            "AboutPreview"
+        );
+
     return (
         <section
             id="about-dream-ceylon"
@@ -86,7 +103,9 @@ export function AboutPreview() {
                             <Image
                                 fill
                                 src="/images/destinations/sigiriya-rock-fortress-sri-lanka.jpg"
-                                alt="Sigiriya Rock Fortress surrounded by the Sri Lankan landscape"
+                                alt={t(
+                                    "imageAlt"
+                                )}
                                 sizes="
                                     (max-width: 1024px) 100vw,
                                     46vw
@@ -135,7 +154,9 @@ export function AboutPreview() {
                                             text-brand-gold
                                         "
                                     >
-                                        Your local travel partner
+                                        {t(
+                                            "imageCard.eyebrow"
+                                        )}
                                     </p>
 
                                     <p
@@ -147,8 +168,9 @@ export function AboutPreview() {
                                             leading-tight
                                         "
                                     >
-                                        Discover Sri Lanka beyond
-                                        the ordinary.
+                                        {t(
+                                            "imageCard.title"
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -184,7 +206,9 @@ export function AboutPreview() {
                                 "
                             >
                                 <CheckCircle2
-                                    size={22}
+                                    size={
+                                        22
+                                    }
                                     aria-hidden="true"
                                 />
                             </div>
@@ -198,7 +222,9 @@ export function AboutPreview() {
                                     text-brand-950
                                 "
                             >
-                                Planned around you
+                                {t(
+                                    "floatingCard.title"
+                                )}
                             </p>
 
                             <p
@@ -209,18 +235,24 @@ export function AboutPreview() {
                                     text-slate-600
                                 "
                             >
-                                Your dates, interests, comfort,
-                                and preferred travel pace guide
-                                every itinerary.
+                                {t(
+                                    "floatingCard.description"
+                                )}
                             </p>
                         </div>
                     </div>
 
                     <div>
                         <SectionHeading
-                            eyebrow="About Dream Ceylon Journeys"
-                            title="Local knowledge. Personal service. Journeys made for you."
-                            description="Dream Ceylon Journeys is a locally based Sri Lankan destination management and private tour company creating carefully planned journeys across the island."
+                            eyebrow={t(
+                                "heading.eyebrow"
+                            )}
+                            title={t(
+                                "heading.title"
+                            )}
+                            description={t(
+                                "heading.description"
+                            )}
                         />
 
                         <p
@@ -232,82 +264,92 @@ export function AboutPreview() {
                                 sm:text-lg
                             "
                         >
-                            We combine destination knowledge,
-                            comfortable private transport,
-                            thoughtful itinerary planning, and
-                            dependable local support to make
-                            travelling through Sri Lanka easier,
-                            safer, and more meaningful.
+                            {t(
+                                "body"
+                            )}
                         </p>
 
                         <div className="mt-8 space-y-5">
-                            {highlights.map((item) => {
-                                const Icon = item.icon;
+                            {highlightDefinitions.map(
+                                (
+                                    item
+                                ) => {
+                                    const Icon =
+                                        item.icon;
 
-                                return (
-                                    <article
-                                        key={item.title}
-                                        className="
-                                            flex
-                                            items-start
-                                            gap-4
-                                            rounded-[1.35rem]
-                                            border
-                                            border-brand-500/10
-                                            bg-sand-50
-                                            p-5
-                                            transition
-                                            duration-300
-                                            hover:-translate-y-0.5
-                                            hover:bg-white
-                                            hover:shadow-[0_16px_45px_rgba(7,45,44,0.08)]
-                                        "
-                                    >
-                                        <div
+                                    return (
+                                        <article
+                                            key={
+                                                item.key
+                                            }
                                             className="
                                                 flex
-                                                h-11
-                                                w-11
-                                                shrink-0
-                                                items-center
-                                                justify-center
-                                                rounded-xl
-                                                bg-brand-100
-                                                text-brand-700
+                                                items-start
+                                                gap-4
+                                                rounded-[1.35rem]
+                                                border
+                                                border-brand-500/10
+                                                bg-sand-50
+                                                p-5
+                                                transition
+                                                duration-300
+                                                hover:-translate-y-0.5
+                                                hover:bg-white
+                                                hover:shadow-[0_16px_45px_rgba(7,45,44,0.08)]
                                             "
                                         >
-                                            <Icon
-                                                size={21}
-                                                aria-hidden="true"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <h3
+                                            <div
                                                 className="
-                                                    font-display
-                                                    text-xl
-                                                    font-semibold
-                                                    text-brand-950
+                                                    flex
+                                                    h-11
+                                                    w-11
+                                                    shrink-0
+                                                    items-center
+                                                    justify-center
+                                                    rounded-xl
+                                                    bg-brand-100
+                                                    text-brand-700
                                                 "
                                             >
-                                                {item.title}
-                                            </h3>
+                                                <Icon
+                                                    size={
+                                                        21
+                                                    }
+                                                    aria-hidden="true"
+                                                />
+                                            </div>
 
-                                            <p
-                                                className="
-                                                    mt-1.5
-                                                    text-sm
-                                                    leading-6
-                                                    text-slate-600
-                                                "
-                                            >
-                                                {item.description}
-                                            </p>
-                                        </div>
-                                    </article>
-                                );
-                            })}
+                                            <div>
+                                                <h3
+                                                    className="
+                                                        font-display
+                                                        text-xl
+                                                        font-semibold
+                                                        text-brand-950
+                                                    "
+                                                >
+                                                    {t(
+                                                        `highlights.${item.key}.title`
+                                                    )}
+                                                </h3>
+
+                                                <p
+                                                    className="
+                                                        mt-1.5
+                                                        text-sm
+                                                        leading-6
+                                                        text-slate-600
+                                                    "
+                                                >
+                                                    {t(
+                                                        `highlights.${item.key}.description`
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </article>
+                                    );
+                                }
+                            )}
                         </div>
 
                         <div
@@ -339,10 +381,14 @@ export function AboutPreview() {
                                     hover:bg-brand-600
                                 "
                             >
-                                Learn More About Us
+                                {t(
+                                    "buttons.learnMore"
+                                )}
 
                                 <ArrowRight
-                                    size={19}
+                                    size={
+                                        19
+                                    }
                                     aria-hidden="true"
                                 />
                             </Link>
@@ -367,7 +413,9 @@ export function AboutPreview() {
                                     hover:bg-brand-50
                                 "
                             >
-                                Contact Our Team
+                                {t(
+                                    "buttons.contact"
+                                )}
                             </Link>
                         </div>
                     </div>

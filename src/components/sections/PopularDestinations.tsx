@@ -7,6 +7,10 @@ import {
 } from "lucide-react";
 
 import {
+    getTranslations,
+} from "next-intl/server";
+
+import {
     Container,
 } from "@/components/ui/Container";
 
@@ -19,12 +23,25 @@ import {
     type Destination,
 } from "@/data/destinations";
 
+type TranslationValues =
+    Record<
+        string,
+        string | number
+    >;
+
+type Translate = (
+    key: string,
+    values?: TranslationValues
+) => string;
+
 function DestinationCard({
                              destination,
                              priority,
+                             t,
                          }: {
     destination: Destination;
     priority: boolean;
+    t: Translate;
 }) {
     return (
         <article
@@ -44,9 +61,14 @@ function DestinationCard({
             <Link
                 href={`/sri-lanka-destinations/${destination.slug}`}
                 className="block h-full"
-                aria-label={`Explore ${destination.name}, Sri Lanka`}
+                aria-label={t(
+                    "card.exploreAria",
+                    {
+                        name:
+                        destination.name,
+                    }
+                )}
             >
-                {/* Image */}
                 <div
                     className="
                         relative
@@ -91,12 +113,7 @@ function DestinationCard({
                         "
                     />
 
-                    {/* Category */}
-                    <div
-                        className="
-                            absolute left-5 top-5
-                        "
-                    >
+                    <div className="absolute left-5 top-5">
                         <span
                             className="
                                 inline-flex
@@ -117,7 +134,6 @@ function DestinationCard({
                         </span>
                     </div>
 
-                    {/* Destination name */}
                     <div
                         className="
                             absolute inset-x-0
@@ -134,7 +150,9 @@ function DestinationCard({
                             "
                         >
                             <MapPin
-                                size={14}
+                                size={
+                                    14
+                                }
                                 className="text-brand-gold"
                                 aria-hidden="true"
                             />
@@ -162,7 +180,6 @@ function DestinationCard({
                     </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-5 sm:p-6">
                     <p
                         className="
@@ -193,7 +210,9 @@ function DestinationCard({
                                 text-brand-700
                             "
                         >
-                            Best for
+                            {t(
+                                "card.bestFor"
+                            )}
                         </span>
 
                         <p
@@ -228,7 +247,9 @@ function DestinationCard({
                                 text-brand-700
                             "
                         >
-                            Explore destination
+                            {t(
+                                "card.explore"
+                            )}
                         </span>
 
                         <span
@@ -247,7 +268,9 @@ function DestinationCard({
                             "
                         >
                             <ArrowRight
-                                size={16}
+                                size={
+                                    16
+                                }
                                 aria-hidden="true"
                             />
                         </span>
@@ -259,6 +282,13 @@ function DestinationCard({
 }
 
 export async function PopularDestinations() {
+    const t =
+        (
+            await getTranslations(
+                "PopularDestinations"
+            )
+        ) as Translate;
+
     const destinations =
         await getPopularDestinations(
             6
@@ -276,7 +306,6 @@ export async function PopularDestinations() {
                 lg:py-28
             "
         >
-            {/* Soft background decoration */}
             <div
                 aria-hidden="true"
                 className="
@@ -304,7 +333,6 @@ export async function PopularDestinations() {
             />
 
             <Container className="relative max-w-[1400px]">
-                {/* Heading */}
                 <div
                     className="
                         grid gap-7
@@ -314,9 +342,15 @@ export async function PopularDestinations() {
                     "
                 >
                     <SectionHeading
-                        eyebrow="Explore Sri Lanka"
-                        title="Iconic destinations for an unforgettable journey"
-                        description="Discover ancient kingdoms, misty hill country, wildlife-rich national parks, historic coastal cities, and tropical beaches."
+                        eyebrow={t(
+                            "heading.eyebrow"
+                        )}
+                        title={t(
+                            "heading.title"
+                        )}
+                        description={t(
+                            "heading.description"
+                        )}
                     />
 
                     <Link
@@ -338,10 +372,14 @@ export async function PopularDestinations() {
                             hover:bg-brand-50
                         "
                     >
-                        View all destinations
+                        {t(
+                            "viewAll"
+                        )}
 
                         <ArrowRight
-                            size={17}
+                            size={
+                                17
+                            }
                             aria-hidden="true"
                             className="
                                 transition-transform
@@ -352,7 +390,6 @@ export async function PopularDestinations() {
                     </Link>
                 </div>
 
-                {/* Destination cards */}
                 {destinations.length >
                 0 ? (
                     <div
@@ -379,6 +416,9 @@ export async function PopularDestinations() {
                                         index <
                                         3
                                     }
+                                    t={
+                                        t
+                                    }
                                 />
                             )
                         )}
@@ -403,7 +443,9 @@ export async function PopularDestinations() {
                                 text-slate-900
                             "
                         >
-                            Destinations are being prepared
+                            {t(
+                                "empty.title"
+                            )}
                         </h3>
 
                         <p
@@ -415,9 +457,9 @@ export async function PopularDestinations() {
                                 text-slate-600
                             "
                         >
-                            Destination information
-                            will appear here once it
-                            becomes available.
+                            {t(
+                                "empty.description"
+                            )}
                         </p>
                     </div>
                 )}

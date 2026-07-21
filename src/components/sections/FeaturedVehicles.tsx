@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 
 import {
+    getLocale,
+    getTranslations,
+} from "next-intl/server";
+
+import {
     Container,
 } from "@/components/ui/Container";
 
@@ -22,39 +27,69 @@ import {
     type WebsiteVehicle,
 } from "@/lib/vehicles";
 
+type TranslationValues =
+    Record<
+        string,
+        string | number
+    >;
+
+type Translate = (
+    key: string,
+    values?: TranslationValues
+) => string;
+
 function formatPrice(
-    vehicle: WebsiteVehicle
+    vehicle: WebsiteVehicle,
+    locale: string,
+    t: Translate
 ): string {
     if (
-        vehicle.pricePerDay === null
+        vehicle.pricePerDay ===
+        null
     ) {
-        return "Request quotation";
+        return t(
+            "requestQuotation"
+        );
     }
 
     try {
         return new Intl.NumberFormat(
-            "en-US",
+            locale === "de"
+                ? "de-DE"
+                : "en-US",
             {
-                style: "currency",
+                style:
+                    "currency",
+
                 currency:
                     vehicle.currency ||
                     "USD",
-                maximumFractionDigits: 0,
+
+                maximumFractionDigits:
+                    0,
             }
         ).format(
             vehicle.pricePerDay
         );
     } catch {
-        return `${vehicle.currency} ${vehicle.pricePerDay.toLocaleString()}`;
+        return `${vehicle.currency || "USD"} ${vehicle.pricePerDay.toLocaleString(
+            locale === "de"
+                ? "de-DE"
+                : "en-US"
+        )}`;
     }
 }
 
 function VehicleImage({
                           vehicle,
+                          t,
                       }: {
     vehicle: WebsiteVehicle;
+    t: Translate;
 }) {
-    if (!vehicle.imageUrl) {
+    if (
+        !vehicle.imageUrl
+    ) {
         return (
             <div
                 className="
@@ -83,8 +118,12 @@ function VehicleImage({
                         "
                     >
                         <CarFront
-                            size={40}
-                            strokeWidth={1.7}
+                            size={
+                                40
+                            }
+                            strokeWidth={
+                                1.7
+                            }
                             aria-hidden="true"
                         />
                     </div>
@@ -111,7 +150,9 @@ function VehicleImage({
                             text-slate-900
                         "
                     >
-                        {vehicle.name}
+                        {
+                            vehicle.name
+                        }
                     </p>
                 </div>
             </div>
@@ -130,8 +171,16 @@ function VehicleImage({
         >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-                src={vehicle.imageUrl}
-                alt={`${vehicle.name} private vehicle in Sri Lanka`}
+                src={
+                    vehicle.imageUrl
+                }
+                alt={t(
+                    "imageAlt",
+                    {
+                        name:
+                        vehicle.name,
+                    }
+                )}
                 loading="lazy"
                 decoding="async"
                 className="
@@ -152,9 +201,13 @@ function VehicleImage({
 function VehicleCard({
                          vehicle,
                          index,
+                         locale,
+                         t,
                      }: {
     vehicle: WebsiteVehicle;
     index: number;
+    locale: string;
+    t: Translate;
 }) {
     return (
         <article
@@ -173,7 +226,6 @@ function VehicleCard({
                 hover:shadow-[0_22px_60px_rgba(24,40,38,0.10)]
             "
         >
-            {/* Vehicle image */}
             <div
                 className="
                     relative
@@ -202,7 +254,12 @@ function VehicleCard({
                 />
 
                 <VehicleImage
-                    vehicle={vehicle}
+                    vehicle={
+                        vehicle
+                    }
+                    t={
+                        t
+                    }
                 />
 
                 <div
@@ -225,7 +282,13 @@ function VehicleCard({
                         backdrop-blur-md
                     "
                 >
-                    Private {vehicle.type}
+                    {t(
+                        "privateType",
+                        {
+                            type:
+                            vehicle.type,
+                        }
+                    )}
                 </div>
 
                 <span
@@ -240,7 +303,8 @@ function VehicleCard({
                     "
                 >
                     {String(
-                        index + 1
+                        index +
+                        1
                     ).padStart(
                         2,
                         "0"
@@ -248,7 +312,6 @@ function VehicleCard({
                 </span>
             </div>
 
-            {/* Vehicle content */}
             <div
                 className="
                     flex flex-1
@@ -276,17 +339,20 @@ function VehicleCard({
                         "
                     >
                         <UsersRound
-                            size={16}
+                            size={
+                                16
+                            }
                             className="text-brand-500"
                             aria-hidden="true"
                         />
 
-                        Up to{" "}
-                        {vehicle.capacity}{" "}
-                        {vehicle.capacity ===
-                        1
-                            ? "passenger"
-                            : "passengers"}
+                        {t(
+                            "passengerCount",
+                            {
+                                count:
+                                vehicle.capacity,
+                            }
+                        )}
                     </span>
 
                     <span
@@ -300,12 +366,16 @@ function VehicleCard({
                         "
                     >
                         <Snowflake
-                            size={16}
+                            size={
+                                16
+                            }
                             className="text-brand-500"
                             aria-hidden="true"
                         />
 
-                        Air-conditioned
+                        {t(
+                            "airConditioned"
+                        )}
                     </span>
                 </div>
 
@@ -320,7 +390,9 @@ function VehicleCard({
                         text-slate-900
                     "
                 >
-                    {vehicle.name}
+                    {
+                        vehicle.name
+                    }
                 </h3>
 
                 <p
@@ -336,30 +408,28 @@ function VehicleCard({
                 </p>
 
                 {vehicle.features.length >
-                    0 && (
-                        <div
-                            className="
-                            mt-6
-                            space-y-3
-                        "
-                        >
-                            {vehicle.features
-                                .slice(0, 3)
-                                .map(
-                                    (
-                                        feature,
-                                        featureIndex
-                                    ) => (
-                                        <div
-                                            key={`${feature}-${featureIndex}`}
-                                            className="
+                0 ? (
+                    <div className="mt-6 space-y-3">
+                        {vehicle.features
+                            .slice(
+                                0,
+                                3
+                            )
+                            .map(
+                                (
+                                    feature,
+                                    featureIndex
+                                ) => (
+                                    <div
+                                        key={`${feature}-${featureIndex}`}
+                                        className="
                                             flex
                                             items-start
                                             gap-3
                                             text-sm
                                             text-slate-600
                                         "
-                                        >
+                                    >
                                         <span
                                             className="
                                                 mt-0.5
@@ -374,7 +444,9 @@ function VehicleCard({
                                             "
                                         >
                                             <Check
-                                                size={12}
+                                                size={
+                                                    12
+                                                }
                                                 strokeWidth={
                                                     2.4
                                                 }
@@ -382,23 +454,18 @@ function VehicleCard({
                                             />
                                         </span>
 
-                                            <span>
+                                        <span>
                                             {
                                                 feature
                                             }
                                         </span>
-                                        </div>
-                                    )
-                                )}
-                        </div>
-                    )}
+                                    </div>
+                                )
+                            )}
+                    </div>
+                ) : null}
 
-                <div
-                    className="
-                        mt-auto
-                        pt-7
-                    "
-                >
+                <div className="mt-auto pt-7">
                     <div
                         className="
                             flex
@@ -422,8 +489,12 @@ function VehicleCard({
                             >
                                 {vehicle.pricePerDay ===
                                 null
-                                    ? "Pricing"
-                                    : "Starting from"}
+                                    ? t(
+                                        "pricing"
+                                    )
+                                    : t(
+                                        "startingFrom"
+                                    )}
                             </p>
 
                             <div
@@ -442,23 +513,27 @@ function VehicleCard({
                                     "
                                 >
                                     {formatPrice(
-                                        vehicle
+                                        vehicle,
+                                        locale,
+                                        t
                                     )}
                                 </p>
 
                                 {vehicle.pricePerDay !==
-                                    null && (
-                                        <span
-                                            className="
+                                null ? (
+                                    <span
+                                        className="
                                             pb-1
                                             text-xs
                                             font-medium
                                             text-slate-400
                                         "
-                                        >
-                                        / day
+                                    >
+                                        {t(
+                                            "perDay"
+                                        )}
                                     </span>
-                                    )}
+                                ) : null}
                             </div>
                         </div>
 
@@ -485,10 +560,14 @@ function VehicleCard({
                                 hover:bg-brand-600
                             "
                         >
-                            View Details
+                            {t(
+                                "viewDetails"
+                            )}
 
                             <ArrowRight
-                                size={17}
+                                size={
+                                    17
+                                }
                                 aria-hidden="true"
                                 className="
                                     transition-transform
@@ -519,8 +598,24 @@ function VehicleCard({
 }
 
 export async function FeaturedVehicles() {
+    const [
+        locale,
+        translations,
+    ] =
+        await Promise.all([
+            getLocale(),
+
+            getTranslations(
+                "FeaturedVehicles"
+            ),
+        ]);
+
+    const t =
+        translations as Translate;
+
     let vehicles:
-        WebsiteVehicle[] = [];
+        WebsiteVehicle[] =
+        [];
 
     try {
         vehicles =
@@ -572,12 +667,7 @@ export async function FeaturedVehicles() {
                 "
             />
 
-            <Container
-                className="
-                    relative
-                    max-w-[1380px]
-                "
-            >
+            <Container className="relative max-w-[1380px]">
                 <div
                     className="
                         grid gap-7
@@ -587,9 +677,15 @@ export async function FeaturedVehicles() {
                     "
                 >
                     <SectionHeading
-                        eyebrow="Private transport"
-                        title="Comfortable vehicles for every Sri Lanka journey."
-                        description="Choose a private air-conditioned vehicle according to your group size, luggage requirements, travel route, and preferred level of comfort."
+                        eyebrow={t(
+                            "heading.eyebrow"
+                        )}
+                        title={t(
+                            "heading.title"
+                        )}
+                        description={t(
+                            "heading.description"
+                        )}
                     />
 
                     <div
@@ -608,7 +704,9 @@ export async function FeaturedVehicles() {
                         "
                     >
                         <Luggage
-                            size={21}
+                            size={
+                                21
+                            }
                             className="
                                 mt-1
                                 shrink-0
@@ -618,16 +716,15 @@ export async function FeaturedVehicles() {
                         />
 
                         <p>
-                            Vehicle recommendations
-                            are based on passenger
-                            count, luggage space,
-                            route conditions, and tour
-                            duration.
+                            {t(
+                                "recommendation"
+                            )}
                         </p>
                     </div>
                 </div>
 
-                {vehicles.length > 0 ? (
+                {vehicles.length >
+                0 ? (
                     <div
                         className="
                             mt-12
@@ -650,6 +747,12 @@ export async function FeaturedVehicles() {
                                     }
                                     index={
                                         index
+                                    }
+                                    locale={
+                                        locale
+                                    }
+                                    t={
+                                        t
                                     }
                                 />
                             )
@@ -680,8 +783,12 @@ export async function FeaturedVehicles() {
                             "
                         >
                             <CarFront
-                                size={40}
-                                strokeWidth={1.7}
+                                size={
+                                    40
+                                }
+                                strokeWidth={
+                                    1.7
+                                }
                                 aria-hidden="true"
                             />
                         </div>
@@ -695,8 +802,9 @@ export async function FeaturedVehicles() {
                                 text-slate-900
                             "
                         >
-                            Vehicle options are being
-                            prepared
+                            {t(
+                                "empty.title"
+                            )}
                         </h3>
 
                         <p
@@ -708,11 +816,9 @@ export async function FeaturedVehicles() {
                                 text-slate-600
                             "
                         >
-                            Add an active vehicle
-                            through the Dream Ceylon
-                            CRM and mark it as
-                            featured to display it
-                            here.
+                            {t(
+                                "empty.description"
+                            )}
                         </p>
                     </div>
                 )}
@@ -734,10 +840,9 @@ export async function FeaturedVehicles() {
                     "
                 >
                     <p>
-                        Daily rates may vary according
-                        to route, mileage, tour
-                        duration, and seasonal
-                        requirements.
+                        {t(
+                            "rateNote"
+                        )}
                     </p>
 
                     <Link
@@ -755,10 +860,14 @@ export async function FeaturedVehicles() {
                             hover:text-brand-900
                         "
                     >
-                        View vehicle details
+                        {t(
+                            "viewAll"
+                        )}
 
                         <ArrowRight
-                            size={16}
+                            size={
+                                16
+                            }
                             aria-hidden="true"
                             className="
                                 transition-transform

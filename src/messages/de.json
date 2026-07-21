@@ -93,5 +93,207 @@
       "title": "Private Sri-Lanka-Rundreisen",
       "description": "Individuelle Sri-Lanka-Reisen, private Rundreisen und maßgeschneiderte Reiseplanung mit lokalen Experten."
     }
+  },
+  "HomeMetadata": {
+    "title": "Private Sri-Lanka-Rundreisen und individuelle Reisen",
+    "description": "Private Sri-Lanka-Rundreisen, maßgeschneiderte Reisepläne und persönliche Betreuung durch lokale Reiseexperten."
+  },
+  "HomeHero": {
+    "speakToExpert": "Mit einem lokalen Experten sprechen",
+    "meta": "Private Reisen • Lokale Expertise • Unterstützung rund um die Uhr",
+    "scroll": "Weiter",
+    "aria": {
+      "carousel": "Ausgewählte Sri-Lanka-Reisen",
+      "showSlide": "Folie {number} anzeigen: {location}",
+      "previousSlide": "Vorherige Folie anzeigen",
+      "nextSlide": "Nächste Folie anzeigen",
+      "scroll": "Zum nächsten Abschnitt scrollen"
+    },
+    "slides": {
+      "sigiriya": {
+        "imageAlt": "Der Sigiriya-Löwenfelsen erhebt sich bei Sonnenaufgang über dem grünen Wald Sri Lankas",
+        "eyebrow": "Maßgeschneiderte Sri-Lanka-Reisen",
+        "title": "Uralte Wunder.",
+        "accent": "Unvergessliche Reisen.",
+        "description": "Entdecken Sie zeitlose Königreiche, neblige Hochländer, wilde Nationalparks und tropische Küsten auf einer privaten Reise, die ganz auf Sie zugeschnitten ist.",
+        "location": "Kulturdreieck von Sigiriya",
+        "primaryCta": "Meine Reise planen"
+      },
+      "ella": {
+        "imageAlt": "Ein blauer Zug fährt durch das grüne Teehochland nahe Ella in Sri Lanka",
+        "eyebrow": "Malerische Inselerlebnisse",
+        "title": "Entschleunigen.",
+        "accent": "Den Schienen folgen.",
+        "description": "Reisen Sie durch smaragdgrüne Teeplantagen, Bergdörfer, Wasserfälle und einige der schönsten Eisenbahnlandschaften Asiens.",
+        "location": "Hochland von Ella",
+        "primaryCta": "Unsere Rundreisen entdecken"
+      },
+      "yala": {
+        "imageAlt": "Ein Sri-Lanka-Leopard ruht in der Wildnis des Yala-Nationalparks",
+        "eyebrow": "Wildtiere und Natur",
+        "title": "Die Wildnis erleben.",
+        "accent": "Sri Lanka spüren.",
+        "description": "Erleben Sie unvergessliche Safaris, tropische Wälder, Elefanten, Leoparden und eine außergewöhnliche Artenvielfalt mit vertrauenswürdigen lokalen Experten.",
+        "location": "Yala-Nationalpark",
+        "primaryCta": "Erlebnisse entdecken"
+      },
+      "mirissa": {
+        "imageAlt": "Goldener tropischer Strand und palmengesäumte Küste in Mirissa, Sri Lanka",
+        "eyebrow": "Private Auszeiten an der Küste",
+        "title": "Goldene Strände.",
+        "accent": "Endlose Horizonte.",
+        "description": "Entspannen Sie am warmen Indischen Ozean, entdecken Sie versteckte Strände und ergänzen Sie Ihre Reise mit Walbeobachtung, Surfen oder vollkommener Erholung.",
+        "location": "Südküste von Mirissa",
+        "primaryCta": "Reiseziele ansehen"
+      }
+    }
+  },
+  "TrustBar": {
+    "ariaLabel": "Warum mit Dream Ceylon Journeys reisen",
+    "items": {
+      "experiences": {
+        "title": "Mehr als 100 Erlebnisse",
+        "description": "Sorgfältig ausgewählte Orte in ganz Sri Lanka"
+      },
+      "price": {
+        "title": "Bestpreisgarantie",
+        "description": "Transparente Preise ohne versteckte Kosten"
+      },
+      "support": {
+        "title": "Lokale Unterstützung rund um die Uhr",
+        "description": "Freundliche Betreuung während Ihrer gesamten Reise"
+      },
+      "planning": {
+        "title": "Schnelle Reiseplanung",
+        "description": "Schnelle und individuell abgestimmte Reiseplanung"
+      }
+    }
+  },
+  "AboutPreview": {
+    "imageAlt": "Die Felsenfestung Sigiriya inmitten der Landschaft Sri Lankas",
+    "imageCard": {
+      "eyebrow": "Ihr lokaler Reisepartner",
+      "title": "Entdecken Sie Sri Lanka jenseits des Gewöhnlichen."
+    },
+    "floatingCard": {
+      "title": "Für Sie geplant",
+      "description": "Ihre Reisedaten, Interessen, Komfortwünsche und Ihr bevorzugtes Reisetempo bestimmen jede Route."
+    },
+    "heading": {
+      "eyebrow": "Über Dream Ceylon Journeys",
+      "title": "Lokales Wissen. Persönlicher Service. Reisen, die zu Ihnen passen.",
+      "description": "Dream Ceylon Journeys ist ein lokales sri-lankisches Destinationsmanagement- und Privatreiseunternehmen, das sorgfältig geplante Reisen durch die gesamte Insel gestaltet."
+    },
+    "body": "Wir verbinden fundierte Ortskenntnisse, komfortable private Transporte, durchdachte Reiseplanung und zuverlässige Unterstützung vor Ort, damit Ihre Reise durch Sri Lanka einfacher, sicherer und bedeutungsvoller wird.",
+    "highlights": {
+      "localKnowledge": {
+        "title": "Lokales Wissen über Sri Lanka",
+        "description": "Sorgfältige Empfehlungen, die auf echter Erfahrung mit der Insel beruhen."
+      },
+      "tailorMade": {
+        "title": "Maßgeschneiderte Privatreisen",
+        "description": "Reisen, die auf Ihre Interessen, Reisedaten, Ihr Tempo und Ihren Reisestil abgestimmt sind."
+      },
+      "personalSupport": {
+        "title": "Persönliche Betreuung während der gesamten Reise",
+        "description": "Zuverlässige Unterstützung vom ersten Gespräch bis zu Ihrem letzten Transfer."
+      }
+    },
+    "buttons": {
+      "learnMore": "Mehr über uns erfahren",
+      "contact": "Unser Team kontaktieren"
+    }
+  },
+  "HomePromise": {
+    "heading": {
+      "eyebrow": "Das Versprechen von Dream Ceylon",
+      "title": "Reisen, gestaltet mit Sorgfalt, Wissen und lokaler Verbundenheit.",
+      "description": "Jede Privatreise wird sorgfältig nach Ihren Interessen, Ihrem Reisestil, Ihrem Tempo und Ihren Erwartungen geplant."
+    },
+    "items": {
+      "locallyDesigned": {
+        "title": "Lokal geplant",
+        "description": "Reisen, die von sri-lankischen Experten mit umfassendem Wissen über die Insel gestaltet werden."
+      },
+      "personallyHosted": {
+        "title": "Persönlich betreut",
+        "description": "Herzliche und zuverlässige Unterstützung von der Planung bis zum abschließenden Flughafentransfer."
+      },
+      "travelConfidence": {
+        "title": "Mit Vertrauen reisen",
+        "description": "Professionelle Guides, komfortable Fahrzeuge und zuverlässige Unterstützung vor Ort."
+      }
+    }
+  },
+  "PopularDestinations": {
+    "heading": {
+      "eyebrow": "Sri Lanka entdecken",
+      "title": "Legendäre Reiseziele für eine unvergessliche Reise",
+      "description": "Entdecken Sie alte Königreiche, nebliges Hochland, wildreiche Nationalparks, historische Küstenstädte und tropische Strände."
+    },
+    "viewAll": "Alle Reiseziele ansehen",
+    "card": {
+      "bestFor": "Besonders geeignet für",
+      "explore": "Reiseziel entdecken",
+      "exploreAria": "{name} in Sri Lanka entdecken"
+    },
+    "empty": {
+      "title": "Reiseziele werden vorbereitet",
+      "description": "Informationen zu den Reisezielen erscheinen hier, sobald sie verfügbar sind."
+    }
+  },
+  "FeaturedTours": {
+    "requestQuotation": "Angebot anfragen",
+    "imageAlt": "Private Sri-Lanka-Reise: {title}",
+    "exploreDestination": "{name} entdecken",
+    "duration": {
+      "daysNights": "{days, plural, one {# Tag} other {# Tage}} / {nights, plural, one {# Nacht} other {# Nächte}}",
+      "days": "{days, plural, one {# Tag} other {# Tage}}"
+    },
+    "destinationCount": "{count, plural, one {# Reiseziel} other {# Reiseziele}}",
+    "featuredJourney": "Ausgewählte Reise",
+    "tourRoute": "Reiseroute",
+    "pricing": "Preis",
+    "finalPriceNote": "Der endgültige Preis hängt von den Reisedaten und der Gruppengröße ab",
+    "customise": "Anpassen",
+    "viewTour": "Reise ansehen",
+    "heading": {
+      "eyebrow": "Ausgewählte Reisen",
+      "title": "Sorgfältig geplante Rundreisen durch Sri Lanka.",
+      "description": "Wählen Sie eine durchdacht geplante Privatreise oder gestalten Sie jedes Detail gemeinsam mit unseren lokalen Reisespezialisten."
+    },
+    "exploreAll": "Alle Rundreisen entdecken",
+    "empty": {
+      "title": "Ausgewählte Reisen werden vorbereitet",
+      "description": "Fügen Sie im Dream Ceylon CRM ein aktives Reisepaket hinzu und markieren Sie es als empfohlen."
+    },
+    "custom": {
+      "title": "Suchen Sie etwas anderes?",
+      "description": "Teilen Sie uns Ihre Reisedaten, Interessen und Ihr bevorzugtes Tempo mit. Wir erstellen eine private Sri-Lanka-Reise ganz nach Ihren Wünschen.",
+      "button": "Meine Reise erstellen"
+    }
+  },
+  "FeaturedVehicles": {
+    "requestQuotation": "Angebot anfragen",
+    "imageAlt": "{name} als Privatfahrzeug für Reisen in Sri Lanka",
+    "privateType": "Privater {type}",
+    "passengerCount": "{count, plural, one {Bis zu # Fahrgast} other {Bis zu # Fahrgäste}}",
+    "airConditioned": "Klimatisiert",
+    "pricing": "Preis",
+    "startingFrom": "Ab",
+    "perDay": "/ Tag",
+    "viewDetails": "Details ansehen",
+    "heading": {
+      "eyebrow": "Privater Transport",
+      "title": "Komfortable Fahrzeuge für jede Sri-Lanka-Reise.",
+      "description": "Wählen Sie ein privates, klimatisiertes Fahrzeug passend zu Ihrer Gruppengröße, Ihrem Gepäck, Ihrer Route und Ihrem gewünschten Komfort."
+    },
+    "recommendation": "Unsere Fahrzeugempfehlung berücksichtigt die Anzahl der Reisenden, den Gepäckraum, die Straßenverhältnisse und die Reisedauer.",
+    "empty": {
+      "title": "Fahrzeugoptionen werden vorbereitet",
+      "description": "Fügen Sie im Dream Ceylon CRM ein aktives Fahrzeug hinzu und markieren Sie es als empfohlen, damit es hier angezeigt wird."
+    },
+    "rateNote": "Die Tagespreise können je nach Route, Kilometerzahl, Reisedauer und saisonalen Anforderungen variieren.",
+    "viewAll": "Fahrzeugdetails ansehen"
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+
 import {
     ArrowRight,
     ChevronLeft,
@@ -10,84 +11,236 @@ import {
     Mouse,
     Sparkles,
 } from "lucide-react";
+
 import {
     useCallback,
     useEffect,
     useState,
+    useSyncExternalStore,
 } from "react";
 
-import { ButtonLink } from "@/components/ui/ButtonLink";
-import { Container } from "@/components/ui/Container";
-import { heroSlides } from "@/data/hero-slides";
-import { whatsappUrl } from "@/lib/site";
+import {
+    useTranslations,
+} from "next-intl";
+
+import {
+    ButtonLink,
+} from "@/components/ui/ButtonLink";
+
+import {
+    Container,
+} from "@/components/ui/Container";
+
+import {
+    heroSlides,
+} from "@/data/hero-slides";
+
+import {
+    whatsappUrl,
+} from "@/lib/site";
 
 import styles from "./HeroSection.module.css";
 
-const SLIDE_DURATION = 7000;
+const SLIDE_DURATION =
+    7000;
+
+const REDUCED_MOTION_QUERY =
+    "(prefers-reduced-motion: reduce)";
+
+type HeroSlideId =
+    | "sigiriya"
+    | "ella"
+    | "yala"
+    | "mirissa";
+
+function getHeroSlideId(
+    id: string
+): HeroSlideId {
+    switch (id) {
+        case "ella":
+        case "yala":
+        case "mirissa":
+            return id;
+
+        case "sigiriya":
+        default:
+            return "sigiriya";
+    }
+}
+
+function getPrimaryHref(
+    slideId: HeroSlideId,
+    fallbackHref: string
+): string {
+    switch (slideId) {
+        case "sigiriya":
+            return "/plan-your-tour";
+
+        case "ella":
+            return "/sri-lanka-tours";
+
+        case "yala":
+            return "/experiences";
+
+        case "mirissa":
+            return "/sri-lanka-destinations";
+
+        default:
+            return fallbackHref;
+    }
+}
+
+function subscribeToReducedMotion(
+    callback: () => void
+): () => void {
+    const mediaQuery =
+        window.matchMedia(
+            REDUCED_MOTION_QUERY
+        );
+
+    mediaQuery.addEventListener(
+        "change",
+        callback
+    );
+
+    return () => {
+        mediaQuery.removeEventListener(
+            "change",
+            callback
+        );
+    };
+}
+
+function getReducedMotionSnapshot(): boolean {
+    return window.matchMedia(
+        REDUCED_MOTION_QUERY
+    ).matches;
+}
+
+function getReducedMotionServerSnapshot(): boolean {
+    return false;
+}
 
 export function HeroSection() {
-    const [activeIndex, setActiveIndex] =
+    const t =
+        useTranslations(
+            "HomeHero"
+        );
+
+    const [
+        activeIndex,
+        setActiveIndex,
+    ] =
         useState(0);
-    const [paused, setPaused] =
+
+    const [
+        paused,
+        setPaused,
+    ] =
         useState(false);
-    const [reducedMotion, setReducedMotion] =
-        useState(false);
 
-    const activeSlide = heroSlides[activeIndex];
-
-    const showSlide = useCallback((index: number) => {
-        const total = heroSlides.length;
-        setActiveIndex((index + total) % total);
-    }, []);
-
-    const showNext = useCallback(() => {
-        setActiveIndex(
-            (current) =>
-                (current + 1) % heroSlides.length
+    const reducedMotion =
+        useSyncExternalStore(
+            subscribeToReducedMotion,
+            getReducedMotionSnapshot,
+            getReducedMotionServerSnapshot
         );
-    }, []);
 
-    const showPrevious = useCallback(() => {
-        setActiveIndex(
-            (current) =>
-                (current - 1 + heroSlides.length) %
-                heroSlides.length
+    const activeSlide =
+        heroSlides[
+            activeIndex
+            ];
+
+    const activeSlideId =
+        getHeroSlideId(
+            activeSlide.id
         );
-    }, []);
+
+    const activeLocation =
+        t(
+            `slides.${activeSlideId}.location`
+        );
+
+    const activePrimaryHref =
+        getPrimaryHref(
+            activeSlideId,
+            activeSlide.primaryCta
+                .href
+        );
+
+    const showSlide =
+        useCallback(
+            (
+                index: number
+            ) => {
+                const total =
+                    heroSlides.length;
+
+                setActiveIndex(
+                    (
+                        index +
+                        total
+                    ) %
+                    total
+                );
+            },
+            []
+        );
+
+    const showNext =
+        useCallback(
+            () => {
+                setActiveIndex(
+                    (
+                        current
+                    ) =>
+                        (
+                            current +
+                            1
+                        ) %
+                        heroSlides.length
+                );
+            },
+            []
+        );
+
+    const showPrevious =
+        useCallback(
+            () => {
+                setActiveIndex(
+                    (
+                        current
+                    ) =>
+                        (
+                            current -
+                            1 +
+                            heroSlides.length
+                        ) %
+                        heroSlides.length
+                );
+            },
+            []
+        );
 
     useEffect(() => {
-        const mediaQuery = window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-        );
-
-        const updatePreference = () => {
-            setReducedMotion(mediaQuery.matches);
-        };
-
-        updatePreference();
-        mediaQuery.addEventListener(
-            "change",
-            updatePreference
-        );
-
-        return () =>
-            mediaQuery.removeEventListener(
-                "change",
-                updatePreference
-            );
-    }, []);
-
-    useEffect(() => {
-        if (paused || reducedMotion) {
+        if (
+            paused ||
+            reducedMotion
+        ) {
             return;
         }
 
-        const timer = window.setTimeout(
-            showNext,
-            SLIDE_DURATION
-        );
+        const timer =
+            window.setTimeout(
+                showNext,
+                SLIDE_DURATION
+            );
 
-        return () => window.clearTimeout(timer);
+        return () => {
+            window.clearTimeout(
+                timer
+            );
+        };
     }, [
         activeIndex,
         paused,
@@ -96,13 +249,20 @@ export function HeroSection() {
     ]);
 
     const handleKeyDown = (
-        event: React.KeyboardEvent<HTMLElement>
+        event:
+        React.KeyboardEvent<HTMLElement>
     ) => {
-        if (event.key === "ArrowRight") {
+        if (
+            event.key ===
+            "ArrowRight"
+        ) {
             showNext();
         }
 
-        if (event.key === "ArrowLeft") {
+        if (
+            event.key ===
+            "ArrowLeft"
+        ) {
             showPrevious();
         }
     };
@@ -113,56 +273,114 @@ export function HeroSection() {
                 "relative isolate overflow-hidden bg-[#151718] text-white",
                 "min-h-[100svh] lg:min-h-[calc(100svh-34px)]",
                 "[@media(max-height:760px)]:min-h-[720px]",
-            ].join(" ")}
+            ].join(
+                " "
+            )}
             aria-roledescription="carousel"
-            aria-label="Featured Sri Lanka journeys"
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocusCapture={() => setPaused(true)}
-            onBlurCapture={() => setPaused(false)}
+            aria-label={t(
+                "aria.carousel"
+            )}
+            tabIndex={
+                0
+            }
+            onKeyDown={
+                handleKeyDown
+            }
+            onMouseEnter={() =>
+                setPaused(
+                    true
+                )
+            }
+            onMouseLeave={() =>
+                setPaused(
+                    false
+                )
+            }
+            onFocusCapture={() =>
+                setPaused(
+                    true
+                )
+            }
+            onBlurCapture={() =>
+                setPaused(
+                    false
+                )
+            }
         >
             <div className="absolute inset-0">
-                {heroSlides.map((slide, index) => {
-                    const active =
-                        index === activeIndex;
+                {heroSlides.map(
+                    (
+                        slide,
+                        index
+                    ) => {
+                        const active =
+                            index ===
+                            activeIndex;
 
-                    return (
-                        <div
-                            key={slide.id}
-                            className={[
-                                styles.slide,
-                                active
-                                    ? styles.activeSlide
-                                    : "",
-                            ]
-                                .filter(Boolean)
-                                .join(" ")}
-                            aria-hidden={!active}
-                        >
-                            <Image
-                                src={slide.image}
-                                alt={slide.imageAlt}
-                                fill
-                                preload={index === 0}
-                                sizes="100vw"
+                        const slideId =
+                            getHeroSlideId(
+                                slide.id
+                            );
+
+                        return (
+                            <div
+                                key={
+                                    slide.id
+                                }
                                 className={[
-                                    styles.heroImage,
-                                    active &&
-                                    !reducedMotion
-                                        ? styles.kenBurns
+                                    styles.slide,
+
+                                    active
+                                        ? styles.activeSlide
                                         : "",
                                 ]
-                                    .filter(Boolean)
-                                    .join(" ")}
-                            />
-                        </div>
-                    );
-                })}
+                                    .filter(
+                                        Boolean
+                                    )
+                                    .join(
+                                        " "
+                                    )}
+                                aria-hidden={
+                                    !active
+                                }
+                            >
+                                <Image
+                                    src={
+                                        slide.image
+                                    }
+                                    alt={t(
+                                        `slides.${slideId}.imageAlt`
+                                    )}
+                                    fill
+                                    preload={
+                                        index ===
+                                        0
+                                    }
+                                    sizes="100vw"
+                                    className={[
+                                        styles.heroImage,
+
+                                        active &&
+                                        !reducedMotion
+                                            ? styles.kenBurns
+                                            : "",
+                                    ]
+                                        .filter(
+                                            Boolean
+                                        )
+                                        .join(
+                                            " "
+                                        )}
+                                />
+                            </div>
+                        );
+                    }
+                )}
 
                 <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,11,12,0.88)_0%,rgba(10,11,12,0.64)_38%,rgba(10,11,12,0.18)_70%,rgba(10,11,12,0.27)_100%)]" />
+
                 <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(8,9,10,0.74)_0%,transparent_43%,rgba(8,9,10,0.12)_100%)]" />
+
                 <div className="absolute inset-0 soft-noise" />
             </div>
 
@@ -176,14 +394,20 @@ export function HeroSection() {
                     "[@media(max-height:800px)]:pt-20",
                     "[@media(max-height:800px)]:pb-20",
                     "[@media(max-height:760px)]:min-h-[720px]",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
             >
                 <div
-                    key={activeSlide.id}
+                    key={
+                        activeSlide.id
+                    }
                     className={[
                         "w-full max-w-4xl",
                         styles.content,
-                    ].join(" ")}
+                    ].join(
+                        " "
+                    )}
                     aria-live="polite"
                     aria-atomic="true"
                 >
@@ -192,13 +416,20 @@ export function HeroSection() {
                             "inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/20 px-4 py-2",
                             "text-[11px] font-bold uppercase tracking-[0.22em] text-brand-gold backdrop-blur-md sm:text-xs",
                             styles.eyebrow,
-                        ].join(" ")}
+                        ].join(
+                            " "
+                        )}
                     >
                         <Sparkles
-                            size={15}
+                            size={
+                                15
+                            }
                             aria-hidden="true"
                         />
-                        {activeSlide.eyebrow}
+
+                        {t(
+                            `slides.${activeSlideId}.eyebrow`
+                        )}
                     </div>
 
                     <h1
@@ -207,12 +438,18 @@ export function HeroSection() {
                             "text-[clamp(3.25rem,6.1vw,5.5rem)]",
                             "[@media(max-height:800px)]:text-[clamp(3rem,5.2vw,4.4rem)]",
                             styles.title,
-                        ].join(" ")}
+                        ].join(
+                            " "
+                        )}
                     >
-                        {activeSlide.title}
+                        {t(
+                            `slides.${activeSlideId}.title`
+                        )}
 
                         <span className="mt-1 block text-brand-gold">
-                            {activeSlide.accent}
+                            {t(
+                                `slides.${activeSlideId}.accent`
+                            )}
                         </span>
                     </h1>
 
@@ -223,9 +460,13 @@ export function HeroSection() {
                             "[@media(max-height:800px)]:text-base",
                             "[@media(max-height:800px)]:leading-7",
                             styles.description,
-                        ].join(" ")}
+                        ].join(
+                            " "
+                        )}
                     >
-                        {activeSlide.description}
+                        {t(
+                            `slides.${activeSlideId}.description`
+                        )}
                     </p>
 
                     <div
@@ -233,36 +474,46 @@ export function HeroSection() {
                             "mt-9 flex flex-col gap-3 sm:flex-row",
                             "[@media(max-height:800px)]:mt-6",
                             styles.actions,
-                        ].join(" ")}
+                        ].join(
+                            " "
+                        )}
                     >
                         <ButtonLink
                             href={
-                                activeSlide.primaryCta
-                                    .href
+                                activePrimaryHref
                             }
                             size="lg"
                         >
-                            {
-                                activeSlide.primaryCta
-                                    .label
-                            }
+                            {t(
+                                `slides.${activeSlideId}.primaryCta`
+                            )}
+
                             <ArrowRight
-                                size={19}
+                                size={
+                                    19
+                                }
                                 aria-hidden="true"
                             />
                         </ButtonLink>
 
                         <ButtonLink
-                            href={whatsappUrl}
+                            href={
+                                whatsappUrl
+                            }
                             external
                             variant="light"
                             size="lg"
                         >
                             <MessageCircle
-                                size={19}
+                                size={
+                                    19
+                                }
                                 aria-hidden="true"
                             />
-                            Speak to a Local Expert
+
+                            {t(
+                                "speakToExpert"
+                            )}
                         </ButtonLink>
                     </div>
 
@@ -271,22 +522,30 @@ export function HeroSection() {
                             "mt-9 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-white/64",
                             "[@media(max-height:800px)]:mt-6",
                             styles.meta,
-                        ].join(" ")}
+                        ].join(
+                            " "
+                        )}
                     >
                         <span className="inline-flex items-center gap-2">
                             <MapPin
-                                size={17}
+                                size={
+                                    17
+                                }
                                 className="text-brand-500"
                                 aria-hidden="true"
                             />
-                            {activeSlide.location}
+
+                            {
+                                activeLocation
+                            }
                         </span>
 
                         <span className="hidden h-1 w-1 rounded-full bg-white/35 sm:block" />
 
                         <span>
-                            Private journeys • Local
-                            expertise • 24/7 support
+                            {t(
+                                "meta"
+                            )}
                         </span>
                     </div>
                 </div>
@@ -298,16 +557,33 @@ export function HeroSection() {
                         <div className="flex min-w-0 flex-1 items-center gap-4">
                             <span className="hidden min-w-12 font-display text-lg text-white sm:block">
                                 {String(
-                                    activeIndex + 1
-                                ).padStart(2, "0")}
+                                    activeIndex +
+                                    1
+                                ).padStart(
+                                    2,
+                                    "0"
+                                )}
                             </span>
 
                             <div className="flex max-w-md flex-1 items-center gap-2">
                                 {heroSlides.map(
-                                    (slide, index) => {
+                                    (
+                                        slide,
+                                        index
+                                    ) => {
                                         const active =
                                             index ===
                                             activeIndex;
+
+                                        const slideId =
+                                            getHeroSlideId(
+                                                slide.id
+                                            );
+
+                                        const location =
+                                            t(
+                                                `slides.${slideId}.location`
+                                            );
 
                                         return (
                                             <button
@@ -322,17 +598,23 @@ export function HeroSection() {
                                                 }
                                                 className={[
                                                     "group relative h-8 flex-1",
+
                                                     active
                                                         ? "max-w-28"
                                                         : "max-w-12",
                                                 ].join(
                                                     " "
                                                 )}
-                                                aria-label={`Show slide ${
-                                                    index + 1
-                                                }: ${
-                                                    slide.location
-                                                }`}
+                                                aria-label={t(
+                                                    "aria.showSlide",
+                                                    {
+                                                        number:
+                                                            index +
+                                                            1,
+
+                                                        location,
+                                                    }
+                                                )}
                                                 aria-current={
                                                     active
                                                         ? "true"
@@ -345,6 +627,7 @@ export function HeroSection() {
                                                             key={`${activeIndex}-${paused}`}
                                                             className={[
                                                                 "block h-full bg-brand-gold",
+
                                                                 reducedMotion
                                                                     ? "w-full"
                                                                     : styles.progress,
@@ -355,7 +638,9 @@ export function HeroSection() {
                                                                 reducedMotion
                                                                     ? undefined
                                                                     : {
-                                                                        animationDuration: `${SLIDE_DURATION}ms`,
+                                                                        animationDuration:
+                                                                            `${SLIDE_DURATION}ms`,
+
                                                                         animationPlayState:
                                                                             paused
                                                                                 ? "paused"
@@ -374,31 +659,46 @@ export function HeroSection() {
                             <span className="hidden font-display text-sm text-white/45 sm:block">
                                 {String(
                                     heroSlides.length
-                                ).padStart(2, "0")}
+                                ).padStart(
+                                    2,
+                                    "0"
+                                )}
                             </span>
                         </div>
 
                         <div className="flex shrink-0 items-center gap-2">
                             <button
                                 type="button"
-                                onClick={showPrevious}
+                                onClick={
+                                    showPrevious
+                                }
                                 className="inline-flex size-11 items-center justify-center rounded-full border border-white/22 bg-black/20 text-white backdrop-blur-md transition hover:border-brand-gold hover:bg-brand-gold hover:text-[#202526] sm:size-12"
-                                aria-label="Show previous slide"
+                                aria-label={t(
+                                    "aria.previousSlide"
+                                )}
                             >
                                 <ChevronLeft
-                                    size={21}
+                                    size={
+                                        21
+                                    }
                                     aria-hidden="true"
                                 />
                             </button>
 
                             <button
                                 type="button"
-                                onClick={showNext}
+                                onClick={
+                                    showNext
+                                }
                                 className="inline-flex size-11 items-center justify-center rounded-full border border-white/22 bg-black/20 text-white backdrop-blur-md transition hover:border-brand-gold hover:bg-brand-gold hover:text-[#202526] sm:size-12"
-                                aria-label="Show next slide"
+                                aria-label={t(
+                                    "aria.nextSlide"
+                                )}
                             >
                                 <ChevronRight
-                                    size={21}
+                                    size={
+                                        21
+                                    }
                                     aria-hidden="true"
                                 />
                             </button>
@@ -410,13 +710,20 @@ export function HeroSection() {
             <a
                 href="#dream-ceylon-promise"
                 className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 transition hover:text-brand-gold xl:flex"
-                aria-label="Scroll to the next section"
+                aria-label={t(
+                    "aria.scroll"
+                )}
             >
                 <Mouse
-                    size={19}
+                    size={
+                        19
+                    }
                     aria-hidden="true"
                 />
-                Scroll
+
+                {t(
+                    "scroll"
+                )}
             </a>
         </section>
     );

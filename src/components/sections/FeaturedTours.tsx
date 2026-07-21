@@ -9,52 +9,167 @@ import {
     Sparkles,
 } from "lucide-react";
 
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+    getLocale,
+    getTranslations,
+} from "next-intl/server";
+
+import {
+    Container,
+} from "@/components/ui/Container";
+
+import {
+    SectionHeading,
+} from "@/components/ui/SectionHeading";
 
 import {
     getTours,
     type WebsiteTourPackage,
 } from "@/lib/tours";
 
+type TranslationValues =
+    Record<
+        string,
+        string | number
+    >;
+
+type Translate = (
+    key: string,
+    values?: TranslationValues
+) => string;
+
 function formatPrice(
-    tour: WebsiteTourPackage
+    tour: WebsiteTourPackage,
+    locale: string,
+    t: Translate
 ): string {
-    if (tour.price === null) {
-        return "Request quotation";
+    if (
+        tour.price ===
+        null
+    ) {
+        return t(
+            "requestQuotation"
+        );
     }
 
     try {
         return new Intl.NumberFormat(
-            "en-US",
+            locale === "de"
+                ? "de-DE"
+                : "en-US",
             {
-                style: "currency",
+                style:
+                    "currency",
+
                 currency:
-                    tour.currency || "USD",
-                maximumFractionDigits: 0,
+                    tour.currency ||
+                    "USD",
+
+                maximumFractionDigits:
+                    0,
             }
-        ).format(tour.price);
+        ).format(
+            tour.price
+        );
     } catch {
-        return `${tour.currency} ${tour.price.toLocaleString()}`;
+        return `${tour.currency || "USD"} ${tour.price.toLocaleString(
+            locale === "de"
+                ? "de-DE"
+                : "en-US"
+        )}`;
     }
 }
 
-function getTourHighlights(
-    tour: WebsiteTourPackage
-): string[] {
-    if (tour.highlights.length > 0) {
-        return tour.highlights.slice(0, 4);
+function formatDurationLabel(
+    durationLabel: string,
+    t: Translate
+): string {
+    const daysAndNights =
+        durationLabel.match(
+            /^(\d+)\s*days?\s*\/\s*(\d+)\s*nights?$/i
+        );
+
+    if (
+        daysAndNights
+    ) {
+        return t(
+            "duration.daysNights",
+            {
+                days:
+                    Number(
+                        daysAndNights[1]
+                    ),
+
+                nights:
+                    Number(
+                        daysAndNights[2]
+                    ),
+            }
+        );
     }
 
-    if (tour.inclusions.length > 0) {
-        return tour.inclusions.slice(0, 4);
+    const daysOnly =
+        durationLabel.match(
+            /^(\d+)\s*days?$/i
+        );
+
+    if (
+        daysOnly
+    ) {
+        return t(
+            "duration.days",
+            {
+                days:
+                    Number(
+                        daysOnly[1]
+                    ),
+            }
+        );
+    }
+
+    return durationLabel;
+}
+
+function getTourHighlights(
+    tour: WebsiteTourPackage,
+    t: Translate
+): string[] {
+    if (
+        tour.highlights.length >
+        0
+    ) {
+        return tour.highlights.slice(
+            0,
+            4
+        );
+    }
+
+    if (
+        tour.inclusions.length >
+        0
+    ) {
+        return tour.inclusions.slice(
+            0,
+            4
+        );
     }
 
     return tour.destinations
-        .slice(0, 4)
+        .slice(
+            0,
+            4
+        )
         .map(
-            (destination) =>
-                `Explore ${destination.name}`
+            (
+                destination
+            ) =>
+                t(
+                    "exploreDestination",
+                    {
+                        name:
+                        destination.name,
+                    }
+                )
         );
 }
 
@@ -62,22 +177,30 @@ function getTourRoute(
     tour: WebsiteTourPackage
 ): string[] {
     return tour.destinations.map(
-        (destination) =>
+        (
+            destination
+        ) =>
             destination.name
     );
 }
 
 function TourImage({
                        tour,
+                       t,
                    }: {
     tour: WebsiteTourPackage;
+    t: Translate;
 }) {
-    if (!tour.imageUrl) {
+    if (
+        !tour.imageUrl
+    ) {
         return (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#043F3B] via-[#08736E] to-[#008D86] px-8 text-center">
                 <div className="max-w-sm text-white">
                     <Compass
-                        size={48}
+                        size={
+                            48
+                        }
                         className="mx-auto text-brand-gold"
                         aria-hidden="true"
                     />
@@ -87,7 +210,9 @@ function TourImage({
                     </p>
 
                     <p className="mt-3 font-display text-3xl font-semibold">
-                        {tour.title}
+                        {
+                            tour.title
+                        }
                     </p>
                 </div>
             </div>
@@ -98,8 +223,16 @@ function TourImage({
         // Tour images are dynamically supplied by the CRM backend.
         // eslint-disable-next-line @next/next/no-img-element
         <img
-            src={tour.imageUrl}
-            alt={`${tour.title} private Sri Lanka tour`}
+            src={
+                tour.imageUrl
+            }
+            alt={t(
+                "imageAlt",
+                {
+                    title:
+                    tour.title,
+                }
+            )}
             className="
                 absolute inset-0
                 h-full w-full
@@ -117,18 +250,34 @@ function TourImage({
 function TourRow({
                      tour,
                      index,
+                     locale,
+                     t,
                  }: {
     tour: WebsiteTourPackage;
     index: number;
+    locale: string;
+    t: Translate;
 }) {
     const reverse =
-        index % 2 !== 0;
+        index %
+        2 !==
+        0;
 
     const highlights =
-        getTourHighlights(tour);
+        getTourHighlights(
+            tour,
+            t
+        );
 
     const route =
-        getTourRoute(tour);
+        getTourRoute(
+            tour
+        );
+
+    const customTourHref =
+        locale === "de"
+            ? "/de#custom-tour"
+            : "/#custom-tour";
 
     return (
         <article
@@ -154,12 +303,22 @@ function TourRow({
                     "relative min-h-[330px] overflow-hidden",
                     "sm:min-h-[410px]",
                     "lg:min-h-[520px]",
+
                     reverse
                         ? "lg:order-2"
                         : "lg:order-1",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
             >
-                <TourImage tour={tour} />
+                <TourImage
+                    tour={
+                        tour
+                    }
+                    t={
+                        t
+                    }
+                />
 
                 <div
                     aria-hidden="true"
@@ -197,12 +356,16 @@ function TourRow({
                         "
                     >
                         <Sparkles
-                            size={14}
+                            size={
+                                14
+                            }
                             className="text-brand-gold"
                             aria-hidden="true"
                         />
 
-                        {tour.tourType}
+                        {
+                            tour.tourType
+                        }
                     </span>
 
                     <span
@@ -213,7 +376,10 @@ function TourRow({
                             text-white/75
                         "
                     >
-                        {String(index + 1).padStart(
+                        {String(
+                            index +
+                            1
+                        ).padStart(
                             2,
                             "0"
                         )}
@@ -248,12 +414,17 @@ function TourRow({
                             "
                         >
                             <CalendarDays
-                                size={15}
+                                size={
+                                    15
+                                }
                                 className="text-brand-gold"
                                 aria-hidden="true"
                             />
 
-                            {tour.durationLabel}
+                            {formatDurationLabel(
+                                tour.durationLabel,
+                                t
+                            )}
                         </span>
 
                         <span
@@ -268,15 +439,20 @@ function TourRow({
                             "
                         >
                             <MapPinned
-                                size={15}
+                                size={
+                                    15
+                                }
                                 className="text-brand-gold"
                                 aria-hidden="true"
                             />
 
-                            {tour.destinations.length}{" "}
-                            {tour.destinations.length === 1
-                                ? "destination"
-                                : "destinations"}
+                            {t(
+                                "destinationCount",
+                                {
+                                    count:
+                                    tour.destinations.length,
+                                }
+                            )}
                         </span>
                     </div>
                 </div>
@@ -286,10 +462,13 @@ function TourRow({
                 className={[
                     "flex flex-col justify-center",
                     "p-7 sm:p-10 lg:p-12 xl:p-14",
+
                     reverse
                         ? "lg:order-1"
                         : "lg:order-2",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
             >
                 <div
                     className="
@@ -304,7 +483,9 @@ function TourRow({
                 >
                     <span className="block h-px w-10 bg-brand-gold" />
 
-                    Featured Journey
+                    {t(
+                        "featuredJourney"
+                    )}
                 </div>
 
                 <h3
@@ -321,7 +502,9 @@ function TourRow({
                         lg:text-[52px]
                     "
                 >
-                    {tour.title}
+                    {
+                        tour.title
+                    }
                 </h3>
 
                 <p
@@ -337,7 +520,8 @@ function TourRow({
                         tour.description}
                 </p>
 
-                {highlights.length > 0 && (
+                {highlights.length >
+                0 ? (
                     <div
                         className="
                             mt-6
@@ -366,18 +550,23 @@ function TourRow({
                                     "
                                 >
                                     <Check
-                                        size={13}
+                                        size={
+                                            13
+                                        }
                                         aria-hidden="true"
                                     />
 
-                                    {highlight}
+                                    {
+                                        highlight
+                                    }
                                 </span>
                             )
                         )}
                     </div>
-                )}
+                ) : null}
 
-                {route.length > 0 && (
+                {route.length >
+                0 ? (
                     <div className="mt-7">
                         <p
                             className="
@@ -388,7 +577,9 @@ function TourRow({
                                 text-slate-400
                             "
                         >
-                            Tour Route
+                            {t(
+                                "tourRoute"
+                            )}
                         </p>
 
                         <div
@@ -414,7 +605,9 @@ function TourRow({
                                             items-center gap-2
                                         "
                                     >
-                                        {destination}
+                                        {
+                                            destination
+                                        }
 
                                         {routeIndex <
                                         route.length -
@@ -433,7 +626,7 @@ function TourRow({
                             )}
                         </div>
                     </div>
-                )}
+                ) : null}
 
                 <div
                     className="
@@ -463,8 +656,11 @@ function TourRow({
                                     text-slate-400
                                 "
                             >
-                                {tour.price === null
-                                    ? "Pricing"
+                                {tour.price ===
+                                null
+                                    ? t(
+                                        "pricing"
+                                    )
                                     : tour.priceType}
                             </p>
 
@@ -476,12 +672,17 @@ function TourRow({
                                     text-brand-800
                                 "
                             >
-                                {formatPrice(tour)}
+                                {formatPrice(
+                                    tour,
+                                    locale,
+                                    t
+                                )}
                             </p>
 
                             <p className="mt-1 text-[11px] text-slate-400">
-                                Final price depends on
-                                travel dates and group size
+                                {t(
+                                    "finalPriceNote"
+                                )}
                             </p>
                         </div>
 
@@ -493,7 +694,9 @@ function TourRow({
                             "
                         >
                             <Link
-                                href="/#custom-tour"
+                                href={
+                                    customTourHref
+                                }
                                 className="
                                     inline-flex
                                     min-h-12
@@ -513,7 +716,9 @@ function TourRow({
                                     hover:bg-brand-100
                                 "
                             >
-                                Customise
+                                {t(
+                                    "customise"
+                                )}
                             </Link>
 
                             <Link
@@ -538,10 +743,14 @@ function TourRow({
                                     hover:bg-brand-600
                                 "
                             >
-                                View Tour
+                                {t(
+                                    "viewTour"
+                                )}
 
                                 <ArrowRight
-                                    size={17}
+                                    size={
+                                        17
+                                    }
                                     aria-hidden="true"
                                     className="
                                         transition-transform
@@ -559,7 +768,23 @@ function TourRow({
 }
 
 export async function FeaturedTours() {
-    let tours: WebsiteTourPackage[] =
+    const [
+        locale,
+        translations,
+    ] =
+        await Promise.all([
+            getLocale(),
+
+            getTranslations(
+                "FeaturedTours"
+            ),
+        ]);
+
+    const t =
+        translations as Translate;
+
+    let tours:
+        WebsiteTourPackage[] =
         [];
 
     try {
@@ -575,15 +800,29 @@ export async function FeaturedTours() {
     const featuredTours =
         tours
             .filter(
-                (tour) =>
+                (
+                    tour
+                ) =>
                     tour.featured
             )
-            .slice(0, 3);
+            .slice(
+                0,
+                3
+            );
 
     const displayedTours =
-        featuredTours.length > 0
+        featuredTours.length >
+        0
             ? featuredTours
-            : tours.slice(0, 3);
+            : tours.slice(
+                0,
+                3
+            );
+
+    const customTourHref =
+        locale === "de"
+            ? "/de#custom-tour"
+            : "/#custom-tour";
 
     return (
         <section
@@ -636,9 +875,15 @@ export async function FeaturedTours() {
                     "
                 >
                     <SectionHeading
-                        eyebrow="Featured journeys"
-                        title="Thoughtfully designed tours across Sri Lanka."
-                        description="Choose a carefully planned private journey or customise every detail with our local travel specialists."
+                        eyebrow={t(
+                            "heading.eyebrow"
+                        )}
+                        title={t(
+                            "heading.title"
+                        )}
+                        description={t(
+                            "heading.description"
+                        )}
                     />
 
                     <Link
@@ -665,10 +910,14 @@ export async function FeaturedTours() {
                             hover:bg-brand-50
                         "
                     >
-                        Explore all tours
+                        {t(
+                            "exploreAll"
+                        )}
 
                         <ArrowRight
-                            size={18}
+                            size={
+                                18
+                            }
                             aria-hidden="true"
                             className="
                                 transition-transform
@@ -679,7 +928,8 @@ export async function FeaturedTours() {
                     </Link>
                 </div>
 
-                {displayedTours.length > 0 ? (
+                {displayedTours.length >
+                0 ? (
                     <div className="mt-12 space-y-7">
                         {displayedTours.map(
                             (
@@ -687,9 +937,21 @@ export async function FeaturedTours() {
                                 index
                             ) => (
                                 <TourRow
-                                    key={tour.id}
-                                    tour={tour}
-                                    index={index}
+                                    key={
+                                        tour.id
+                                    }
+                                    tour={
+                                        tour
+                                    }
+                                    index={
+                                        index
+                                    }
+                                    locale={
+                                        locale
+                                    }
+                                    t={
+                                        t
+                                    }
                                 />
                             )
                         )}
@@ -708,19 +970,23 @@ export async function FeaturedTours() {
                         "
                     >
                         <Compass
-                            size={48}
+                            size={
+                                48
+                            }
                             className="mx-auto text-brand-600"
                             aria-hidden="true"
                         />
 
                         <h3 className="mt-5 font-display text-3xl font-semibold text-slate-900">
-                            Featured journeys are being prepared
+                            {t(
+                                "empty.title"
+                            )}
                         </h3>
 
                         <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">
-                            Add an active tour package
-                            through the Dream Ceylon CRM
-                            and mark it as featured.
+                            {t(
+                                "empty.description"
+                            )}
                         </p>
                     </div>
                 )}
@@ -753,7 +1019,9 @@ export async function FeaturedTours() {
                                 text-slate-900
                             "
                         >
-                            Looking for something different?
+                            {t(
+                                "custom.title"
+                            )}
                         </h3>
 
                         <p
@@ -765,16 +1033,16 @@ export async function FeaturedTours() {
                                 text-slate-600
                             "
                         >
-                            Tell us your travel dates,
-                            interests and preferred
-                            pace. We will create a
-                            private Sri Lanka itinerary
-                            around you.
+                            {t(
+                                "custom.description"
+                            )}
                         </p>
                     </div>
 
                     <Link
-                        href="/#custom-tour"
+                        href={
+                            customTourHref
+                        }
                         className="
                             group
                             inline-flex
@@ -796,10 +1064,14 @@ export async function FeaturedTours() {
                             hover:bg-brand-gold-light
                         "
                     >
-                        Create My Tour
+                        {t(
+                            "custom.button"
+                        )}
 
                         <ArrowRight
-                            size={18}
+                            size={
+                                18
+                            }
                             aria-hidden="true"
                             className="
                                 transition-transform

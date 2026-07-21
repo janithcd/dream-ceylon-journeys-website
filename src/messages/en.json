@@ -93,5 +93,209 @@
       "title": "Dream Ceylon Journeys",
       "description": "Private tailor-made Sri Lanka journeys designed by local travel experts."
     }
+  },
+  "HomeMetadata": {
+    "title": "Private Sri Lanka Tours",
+    "description": "Private tailor-made Sri Lanka journeys, round tours and local travel planning with Dream Ceylon Journeys."
+  },
+  "HomeHero": {
+    "speakToExpert": "Speak to a Local Expert",
+    "meta": "Private journeys • Local expertise • 24/7 support",
+    "scroll": "Scroll",
+    "aria": {
+      "carousel": "Featured Sri Lanka journeys",
+      "showSlide": "Show slide {number}: {location}",
+      "previousSlide": "Show previous slide",
+      "nextSlide": "Show next slide",
+      "scroll": "Scroll to the next section"
+    },
+    "slides": {
+      "sigiriya": {
+        "imageAlt": "Sigiriya Lion Rock rising above the green forest at sunrise in Sri Lanka",
+        "eyebrow": "Tailor-made Sri Lanka tours",
+        "title": "Ancient wonders.",
+        "accent": "Unforgettable journeys.",
+        "description": "Explore timeless kingdoms, misty highlands, wild national parks, and tropical shores on a private journey designed around you.",
+        "location": "Sigiriya Cultural Triangle",
+        "primaryCta": "Design My Journey"
+      },
+      "ella": {
+        "imageAlt": "Blue train travelling through the lush green tea country near Ella, Sri Lanka",
+        "eyebrow": "Scenic island experiences",
+        "title": "Slow down.",
+        "accent": "Follow the rails.",
+        "description": "Travel through emerald tea country, mountain villages, waterfalls, and some of the most beautiful railway landscapes in Asia.",
+        "location": "Ella Hill Country",
+        "primaryCta": "Explore Our Tours"
+      },
+      "yala": {
+        "imageAlt": "Sri Lankan leopard resting in the wilderness of Yala National Park",
+        "eyebrow": "Wildlife and nature",
+        "title": "Enter the wild.",
+        "accent": "Feel Sri Lanka.",
+        "description": "Experience unforgettable safaris, tropical forests, elephants, leopards, and extraordinary biodiversity with trusted local experts.",
+        "location": "Yala National Park",
+        "primaryCta": "Discover Experiences"
+      },
+      "mirissa": {
+        "imageAlt": "Golden tropical beach and palm-fringed coastline in Mirissa, Sri Lanka",
+        "eyebrow": "Private coastal escapes",
+        "title": "Golden shores.",
+        "accent": "Endless horizons.",
+        "description": "Unwind beside warm Indian Ocean waters, discover hidden beaches, and add whale watching, surfing, or complete relaxation to your holiday.",
+        "location": "Mirissa South Coast",
+        "primaryCta": "View Destinations"
+      }
+    }
+  },
+  "TrustBar": {
+    "ariaLabel": "Why travel with Dream Ceylon Journeys",
+    "items": {
+      "experiences": {
+        "title": "100+ Experiences",
+        "description": "Carefully selected places across Sri Lanka"
+      },
+      "price": {
+        "title": "Best Price Guarantee",
+        "description": "Transparent rates with no hidden charges"
+      },
+      "support": {
+        "title": "24/7 Local Support",
+        "description": "Friendly assistance throughout your journey"
+      },
+      "planning": {
+        "title": "Fast Tour Planning",
+        "description": "Quick and personalised itinerary support"
+      }
+    }
+  },
+  "AboutPreview": {
+    "imageAlt": "Sigiriya Rock Fortress surrounded by the Sri Lankan landscape",
+    "imageCard": {
+      "eyebrow": "Your local travel partner",
+      "title": "Discover Sri Lanka beyond the ordinary."
+    },
+    "floatingCard": {
+      "title": "Planned around you",
+      "description": "Your dates, interests, comfort, and preferred travel pace guide every itinerary."
+    },
+    "heading": {
+      "eyebrow": "About Dream Ceylon Journeys",
+      "title": "Local knowledge. Personal service. Journeys made for you.",
+      "description": "Dream Ceylon Journeys is a locally based Sri Lankan destination management and private tour company creating carefully planned journeys across the island."
+    },
+    "body": "We combine destination knowledge, comfortable private transport, thoughtful itinerary planning, and dependable local support to make travelling through Sri Lanka easier, safer, and more meaningful.",
+    "highlights": {
+      "localKnowledge": {
+        "title": "Local Sri Lankan knowledge",
+        "description": "Thoughtful recommendations shaped by genuine experience of the island."
+      },
+      "tailorMade": {
+        "title": "Tailor-made private journeys",
+        "description": "Tours designed around your interests, dates, pace, and travel style."
+      },
+      "personalSupport": {
+        "title": "Personal support throughout",
+        "description": "Responsive assistance from your first conversation to your final transfer."
+      }
+    },
+    "buttons": {
+      "learnMore": "Learn More About Us",
+      "contact": "Contact Our Team"
+    }
+  },
+  "HomePromise": {
+    "heading": {
+      "eyebrow": "The Dream Ceylon promise",
+      "title": "Travel designed with care, knowledge, and local heart.",
+      "description": "Every private journey is thoughtfully planned around your interests, travel style, pace, and expectations."
+    },
+    "items": {
+      "locallyDesigned": {
+        "title": "Locally Designed",
+        "description": "Journeys created by Sri Lankan experts who understand the island in depth."
+      },
+      "personallyHosted": {
+        "title": "Personally Hosted",
+        "description": "Warm and responsive assistance from planning through the final airport transfer."
+      },
+      "travelConfidence": {
+        "title": "Travel With Confidence",
+        "description": "Professional guides, comfortable vehicles, and dependable local support."
+      }
+    }
+
+
+  },
+  "PopularDestinations": {
+    "heading": {
+      "eyebrow": "Explore Sri Lanka",
+      "title": "Iconic destinations for an unforgettable journey",
+      "description": "Discover ancient kingdoms, misty hill country, wildlife-rich national parks, historic coastal cities, and tropical beaches."
+    },
+    "viewAll": "View all destinations",
+    "card": {
+      "bestFor": "Best for",
+      "explore": "Explore destination",
+      "exploreAria": "Explore {name}, Sri Lanka"
+    },
+    "empty": {
+      "title": "Destinations are being prepared",
+      "description": "Destination information will appear here once it becomes available."
+    }
+  },
+  "FeaturedTours": {
+    "requestQuotation": "Request quotation",
+    "imageAlt": "{title} private Sri Lanka tour",
+    "exploreDestination": "Explore {name}",
+    "duration": {
+      "daysNights": "{days, plural, one {# day} other {# days}} / {nights, plural, one {# night} other {# nights}}",
+      "days": "{days, plural, one {# day} other {# days}}"
+    },
+    "destinationCount": "{count, plural, one {# destination} other {# destinations}}",
+    "featuredJourney": "Featured Journey",
+    "tourRoute": "Tour Route",
+    "pricing": "Pricing",
+    "finalPriceNote": "Final price depends on travel dates and group size",
+    "customise": "Customise",
+    "viewTour": "View Tour",
+    "heading": {
+      "eyebrow": "Featured journeys",
+      "title": "Thoughtfully designed tours across Sri Lanka.",
+      "description": "Choose a carefully planned private journey or customise every detail with our local travel specialists."
+    },
+    "exploreAll": "Explore all tours",
+    "empty": {
+      "title": "Featured journeys are being prepared",
+      "description": "Add an active tour package through the Dream Ceylon CRM and mark it as featured."
+    },
+    "custom": {
+      "title": "Looking for something different?",
+      "description": "Tell us your travel dates, interests and preferred pace. We will create a private Sri Lanka itinerary around you.",
+      "button": "Create My Tour"
+    }
+  },
+  "FeaturedVehicles": {
+    "requestQuotation": "Request quotation",
+    "imageAlt": "{name} private vehicle in Sri Lanka",
+    "privateType": "Private {type}",
+    "passengerCount": "{count, plural, one {Up to # passenger} other {Up to # passengers}}",
+    "airConditioned": "Air-conditioned",
+    "pricing": "Pricing",
+    "startingFrom": "Starting from",
+    "perDay": "/ day",
+    "viewDetails": "View Details",
+    "heading": {
+      "eyebrow": "Private transport",
+      "title": "Comfortable vehicles for every Sri Lanka journey.",
+      "description": "Choose a private air-conditioned vehicle according to your group size, luggage requirements, travel route, and preferred level of comfort."
+    },
+    "recommendation": "Vehicle recommendations are based on passenger count, luggage space, route conditions, and tour duration.",
+    "empty": {
+      "title": "Vehicle options are being prepared",
+      "description": "Add an active vehicle through the Dream Ceylon CRM and mark it as featured to display it here."
+    },
+    "rateNote": "Daily rates may vary according to route, mileage, tour duration, and seasonal requirements.",
+    "viewAll": "View vehicle details"
   }
 }
