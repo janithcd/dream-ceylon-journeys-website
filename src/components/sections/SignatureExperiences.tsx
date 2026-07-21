@@ -24,6 +24,9 @@ function ExperienceCard({
 }) {
     const Icon = experience.icon;
 
+    const experienceHref =
+        `/experiences#${experience.slug}`;
+
     return (
         <article
             className="
@@ -41,7 +44,7 @@ function ExperienceCard({
             "
         >
             <Link
-                href={`/experiences/${experience.slug}`}
+                href={experienceHref}
                 className="
                     relative block
                     aspect-[4/3]
@@ -227,7 +230,7 @@ function ExperienceCard({
 
                 <div className="mt-auto pt-7">
                     <Link
-                        href={`/experiences/${experience.slug}`}
+                        href={experienceHref}
                         className="
                             group/link
                             inline-flex items-center gap-2
@@ -364,9 +367,9 @@ export function SignatureExperiences() {
                         gap-5
                         border-t border-slate-200
                         pt-8
-                        sm:flex-row
-                        sm:items-center
-                        sm:justify-between
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
                     "
                 >
                     <div>
@@ -389,43 +392,81 @@ export function SignatureExperiences() {
                                 text-slate-600
                             "
                         >
-                            Tell us what you would like to
-                            see and do, and our local team
-                            will design a route around your
-                            preferred experiences.
+                            Explore every experience in
+                            detail or ask our local team to
+                            design a route around your
+                            favourites.
                         </p>
                     </div>
 
-                    <Link
-                        href="/plan-your-tour"
+                    <div
                         className="
-                            group
-                            inline-flex min-h-12
-                            w-fit shrink-0
-                            items-center justify-center
-                            gap-2 rounded-full
-                            bg-brand-500
-                            px-6
-                            text-sm font-bold
-                            text-white
-                            shadow-[0_10px_25px_rgba(0,141,134,0.18)]
-                            transition-all duration-300
-                            hover:-translate-y-0.5
-                            hover:bg-brand-600
+                            flex flex-col gap-3
+                            sm:flex-row
                         "
                     >
-                        Build My Journey
-
-                        <ArrowRight
-                            size={18}
-                            aria-hidden="true"
+                        <Link
+                            href="/experiences"
                             className="
-                                transition-transform
-                                duration-300
-                                group-hover:translate-x-1
+                                group
+                                inline-flex min-h-12
+                                w-fit shrink-0
+                                items-center justify-center
+                                gap-2 rounded-full
+                                border border-brand-500/25
+                                bg-white
+                                px-6
+                                text-sm font-bold
+                                text-brand-700
+                                transition-all duration-300
+                                hover:-translate-y-0.5
+                                hover:border-brand-500
+                                hover:bg-brand-50
                             "
-                        />
-                    </Link>
+                        >
+                            View All Experiences
+
+                            <ArrowRight
+                                size={18}
+                                aria-hidden="true"
+                                className="
+                                    transition-transform
+                                    duration-300
+                                    group-hover:translate-x-1
+                                "
+                            />
+                        </Link>
+
+                        <Link
+                            href="/plan-your-tour"
+                            className="
+                                group
+                                inline-flex min-h-12
+                                w-fit shrink-0
+                                items-center justify-center
+                                gap-2 rounded-full
+                                bg-brand-500
+                                px-6
+                                text-sm font-bold
+                                text-white
+                                shadow-[0_10px_25px_rgba(0,141,134,0.18)]
+                                transition-all duration-300
+                                hover:-translate-y-0.5
+                                hover:bg-brand-600
+                            "
+                        >
+                            Build My Journey
+                            <ArrowRight
+                                size={18}
+                                aria-hidden="true"
+                                className="
+                                    transition-transform
+                                    duration-300
+                                    group-hover:translate-x-1
+                                "
+                            />
+                        </Link>
+                    </div>
                 </div>
             </Container>
         </section>

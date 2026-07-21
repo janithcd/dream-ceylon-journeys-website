@@ -7,6 +7,7 @@ import {
 } from "@/lib/destinations";
 
 import {
+    getDayTours,
     getTours,
 } from "@/lib/tours";
 
@@ -14,12 +15,10 @@ import {
     getVehicles,
 } from "@/lib/vehicles";
 
-export const revalidate =
-    3600;
+export const revalidate = 3600;
 
 const siteUrl = (
-    process.env
-        .NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
     "http://localhost:3000"
 ).replace(/\/+$/, "");
 
@@ -30,8 +29,7 @@ function isRecord(
     value: unknown
 ): value is UnknownRecord {
     return (
-        typeof value ===
-        "object" &&
+        typeof value === "object" &&
         value !== null &&
         !Array.isArray(value)
     );
@@ -40,8 +38,7 @@ function isRecord(
 function getString(
     value: unknown
 ): string {
-    return typeof value ===
-    "string"
+    return typeof value === "string"
         ? value.trim()
         : "";
 }
@@ -73,8 +70,7 @@ function getLastModified(
         value.createdAt;
 
     if (
-        typeof rawDate !==
-        "string" &&
+        typeof rawDate !== "string" &&
         !(rawDate instanceof Date)
     ) {
         return fallback;
@@ -124,6 +120,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url:
                 createUrl(
                     "/sri-lanka-tours"
+                ),
+
+            lastModified:
+            now,
+
+            changeFrequency:
+                "weekly",
+
+            priority:
+                0.9,
+        },
+        {
+            url:
+                createUrl(
+                    "/day-tours"
                 ),
 
             lastModified:
@@ -199,18 +210,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const [
         toursResult,
+        dayToursResult,
         destinationsResult,
         vehiclesResult,
     ] =
         await Promise.allSettled([
             getTours(),
+            getDayTours(),
             getDestinations(),
             getVehicles(),
         ]);
 
     const dynamicPages:
-        MetadataRoute.Sitemap =
-        [];
+        MetadataRoute.Sitemap = [];
 
     if (
         toursResult.status ===
@@ -251,6 +263,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         console.error(
             "[Sitemap Tours]",
             toursResult.reason
+        );
+    }
+
+    if (
+        dayToursResult.status ===
+        "fulfilled"
+    ) {
+        for (
+            const dayTour
+            of dayToursResult.value
+            ) {
+            const slug =
+                getSlug(dayTour);
+
+            if (!slug) {
+                continue;
+            }
+
+            dynamicPages.push({
+                url:
+                    createUrl(
+                        `/day-tours/${encodeURIComponent(
+                            slug
+                        )}`
+                    ),
+
+                lastModified:
+                    getLastModified(
+                        dayTour
+                    ),
+
+                changeFrequency:
+                    "monthly",
+
+                priority:
+                    0.8,
+            });
+        }
+    } else {
+        console.error(
+            "[Sitemap Day Tours]",
+            dayToursResult.reason
         );
     }
 

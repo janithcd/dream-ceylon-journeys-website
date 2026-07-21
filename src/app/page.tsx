@@ -11,6 +11,7 @@ import { FeaturedTours } from "@/components/sections/FeaturedTours";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { FeaturedVehicles } from "@/components/sections/FeaturedVehicles";
 import { SignatureExperiences } from "@/components/sections/SignatureExperiences";
+import { HomeGallery } from "@/components/sections/HomeGallery";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { TripadvisorReviews } from "@/components/sections/TripadvisorReviews";
 import { FaqSection } from "@/components/sections/FaqSection";
@@ -57,6 +58,8 @@ export default function Home() {
 
             <SignatureExperiences />
 
+            <HomeGallery />
+
             <Testimonials />
 
             <TripadvisorReviews />
@@ -78,47 +81,80 @@ export default function Home() {
                     />
 
                     <div className="mt-12 grid gap-5 md:grid-cols-3">
-                        {promises.map((item) => {
-                            const Icon = item.icon;
+                        {promises.map(
+                            (
+                                item
+                            ) => {
+                                const Icon =
+                                    item.icon;
 
-                            return (
-                                <article
-                                    key={item.title}
-                                    className="
-                                        rounded-[1.75rem]
-                                        border border-brand-500/10
-                                        bg-white p-7
-                                        shadow-[0_18px_55px_rgba(18,57,42,0.06)]
-                                        transition duration-300
-                                        hover:-translate-y-1
-                                        hover:shadow-[0_24px_65px_rgba(18,57,42,0.11)]
-                                    "
-                                >
-                                    <div
+                                return (
+                                    <article
+                                        key={
+                                            item.title
+                                        }
                                         className="
-                                            inline-flex size-13
-                                            items-center justify-center
-                                            rounded-2xl
-                                            bg-brand-50
-                                            text-brand-700
+                                            rounded-[1.75rem]
+                                            border
+                                            border-brand-500/10
+                                            bg-white
+                                            p-7
+                                            shadow-[0_18px_55px_rgba(18,57,42,0.06)]
+                                            transition
+                                            duration-300
+                                            hover:-translate-y-1
+                                            hover:shadow-[0_24px_65px_rgba(18,57,42,0.11)]
                                         "
                                     >
-                                        <Icon
-                                            size={24}
-                                            aria-hidden="true"
-                                        />
-                                    </div>
+                                        <div
+                                            className="
+                                                inline-flex
+                                                size-13
+                                                items-center
+                                                justify-center
+                                                rounded-2xl
+                                                bg-brand-50
+                                                text-brand-700
+                                            "
+                                        >
+                                            <Icon
+                                                size={
+                                                    24
+                                                }
+                                                aria-hidden="true"
+                                            />
+                                        </div>
 
-                                    <h2 className="mt-6 font-display text-2xl font-semibold text-slate-900">
-                                        {item.title}
-                                    </h2>
+                                        <h2
+                                            className="
+                                                mt-6
+                                                font-display
+                                                text-2xl
+                                                font-semibold
+                                                text-slate-900
+                                            "
+                                        >
+                                            {
+                                                item.title
+                                            }
+                                        </h2>
 
-                                    <p className="mt-3 text-sm leading-7 text-slate-600">
-                                        {item.description}
-                                    </p>
-                                </article>
-                            );
-                        })}
+                                        <p
+                                            className="
+                                                mt-3
+                                                text-sm
+                                                leading-7
+                                                text-slate-600
+                                            "
+                                        >
+                                            {
+                                                item.description
+                                            }
+                                        </p>
+                                    </article>
+                                );
+                            }
+                        )}
                     </div>
                 </Container>
             </section>
