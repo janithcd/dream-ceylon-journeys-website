@@ -42,19 +42,48 @@ import {
     siteConfig,
     whatsappUrl,
 } from "@/lib/site";
+function normalizePath(
+    value: string
+): string {
+    if (value === "/") {
+        return "/";
+    }
 
+    return value.replace(
+        /\/+$/,
+        ""
+    );
+}
 function isLinkActive(
     pathname: string,
-    href: string
+    href: string,
+    exact = false
 ): boolean {
-    if (href === "/") {
-        return pathname === "/";
+    const normalizedPathname =
+        normalizePath(
+            pathname
+        );
+
+    const normalizedHref =
+        normalizePath(
+            href
+        );
+
+    if (
+        exact ||
+        normalizedHref === "/"
+    ) {
+        return (
+            normalizedPathname ===
+            normalizedHref
+        );
     }
 
     return (
-        pathname === href ||
-        pathname.startsWith(
-            `${href}/`
+        normalizedPathname ===
+        normalizedHref ||
+        normalizedPathname.startsWith(
+            `${normalizedHref}/`
         )
     );
 }
@@ -63,23 +92,22 @@ function isNavigationItemActive(
     pathname: string,
     item: NavigationItem
 ): boolean {
-    if (
-        isLinkActive(
-            pathname,
-            item.href
-        )
-    ) {
-        return true;
-    }
+    const activePaths =
+        item.activePaths?.length
+            ? item.activePaths
+            : [
+                item.href,
+            ];
 
-    return (
-        item.children?.some(
-            (child) =>
-                isLinkActive(
-                    pathname,
-                    child.href
-                )
-        ) ?? false
+    return activePaths.some(
+        (
+            activePath
+        ) =>
+            isLinkActive(
+                pathname,
+                activePath,
+                item.exact
+            )
     );
 }
 
@@ -367,16 +395,19 @@ export function Header() {
 
                                             <div
                                                 className="
-                                                    relative
-                                                    overflow-hidden
-                                                    rounded-[1.5rem]
-                                                    border
-                                                    border-white/95
-                                                    bg-white/95
-                                                    p-2
-                                                    shadow-[0_24px_70px_rgba(20,38,36,0.18)]
-                                                    backdrop-blur-2xl
-                                                "
+    relative
+    max-h-[min(72vh,620px)]
+    overflow-y-auto
+    overscroll-contain
+    rounded-[1.5rem]
+    border
+    border-white/95
+    bg-white/95
+    p-2
+    shadow-[0_24px_70px_rgba(20,38,36,0.18)]
+    backdrop-blur-2xl
+    [scrollbar-width:thin]
+"
                                                 role="menu"
                                             >
                                                 {item.children?.map(
@@ -386,7 +417,8 @@ export function Header() {
                                                         const childActive =
                                                             isLinkActive(
                                                                 pathname,
-                                                                child.href
+                                                                child.href,
+                                                                child.exact
                                                             );
 
                                                         return (
@@ -740,7 +772,8 @@ export function Header() {
                                                             const childActive =
                                                                 isLinkActive(
                                                                     pathname,
-                                                                    child.href
+                                                                    child.href,
+                                                                    child.exact
                                                                 );
 
                                                             return (
