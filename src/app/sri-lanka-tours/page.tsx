@@ -13,6 +13,7 @@ import {
     Route,
     Sparkles,
     Users,
+    WalletCards,
 } from "lucide-react";
 
 import {
@@ -226,11 +227,11 @@ export default async function SriLankaToursPage() {
                                 "Practical Sri Lanka planning",
                         },
                         {
-                            icon: Check,
+                            icon: WalletCards,
                             title:
-                                "CRM connected",
+                                "Flexible Pricing",
                             text:
-                                "Current published packages",
+                                "Tailored to your style and budget",
                         },
                     ].map(
                         ({

@@ -6,6 +6,7 @@ import {
 
 import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustBar } from "@/components/sections/TrustBar";
+import { AboutPreview } from "@/components/sections/AboutPreview";
 import { PopularDestinations } from "@/components/sections/PopularDestinations";
 import { FeaturedTours } from "@/components/sections/FeaturedTours";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
@@ -67,7 +68,7 @@ export default function Home() {
             <FaqSection />
 
             <CustomTourInquiry />
-
+            <AboutPreview />
             <section
                 id="dream-ceylon-promise"
                 className="bg-white py-20 sm:py-24"
