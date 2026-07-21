@@ -26,6 +26,10 @@ import {
 } from "react";
 
 import {
+    LanguageSwitcher,
+} from "@/components/layout/LanguageSwitcher";
+
+import {
     ButtonLink,
 } from "@/components/ui/ButtonLink";
 
@@ -42,6 +46,7 @@ import {
     siteConfig,
     whatsappUrl,
 } from "@/lib/site";
+
 function normalizePath(
     value: string
 ): string {
@@ -54,6 +59,30 @@ function normalizePath(
         ""
     );
 }
+
+function removeLocalePrefix(
+    pathname: string
+): string {
+    if (
+        pathname === "/de"
+    ) {
+        return "/";
+    }
+
+    if (
+        pathname.startsWith(
+            "/de/"
+        )
+    ) {
+        return (
+            pathname.slice(3) ||
+            "/"
+        );
+    }
+
+    return pathname;
+}
+
 function isLinkActive(
     pathname: string,
     href: string,
@@ -115,6 +144,19 @@ export function Header() {
     const pathname =
         usePathname();
 
+    const localizedPathname =
+        removeLocalePrefix(
+            pathname
+        );
+
+    const localizedHomeHref =
+        pathname === "/de" ||
+        pathname.startsWith(
+            "/de/"
+        )
+            ? "/de"
+            : "/";
+
     const [
         mobileOpen,
         setMobileOpen,
@@ -125,9 +167,9 @@ export function Header() {
         expandedMobileItem,
         setExpandedMobileItem,
     ] =
-        useState<string | null>(
-            null
-        );
+        useState<
+            string | null
+        >(null);
 
     const [
         scrolled,
@@ -136,7 +178,7 @@ export function Header() {
         useState(false);
 
     const isHome =
-        pathname === "/";
+        localizedPathname === "/";
 
     useEffect(() => {
         const handleScroll =
@@ -165,15 +207,16 @@ export function Header() {
         };
     }, []);
 
-    useEffect(() => {
-        setMobileOpen(
-            false
-        );
+    const closeMobileMenu =
+        () => {
+            setMobileOpen(
+                false
+            );
 
-        setExpandedMobileItem(
-            null
-        );
-    }, [pathname]);
+            setExpandedMobileItem(
+                null
+            );
+        };
 
     useEffect(() => {
         document.body.style.overflow =
@@ -185,7 +228,9 @@ export function Header() {
             document.body.style.overflow =
                 "";
         };
-    }, [mobileOpen]);
+    }, [
+        mobileOpen,
+    ]);
 
     return (
         <>
@@ -202,7 +247,9 @@ export function Header() {
                                 aria-hidden="true"
                             />
 
-                            {siteConfig.email}
+                            {
+                                siteConfig.email
+                            }
                         </a>
 
                         <a
@@ -214,7 +261,9 @@ export function Header() {
                                 aria-hidden="true"
                             />
 
-                            {siteConfig.phone}
+                            {
+                                siteConfig.phone
+                            }
                         </a>
 
                         <span className="inline-flex items-center gap-2">
@@ -228,9 +277,11 @@ export function Header() {
                     </div>
 
                     <a
-                        href={whatsappUrl}
+                        href={
+                            whatsappUrl
+                        }
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         className="group inline-flex items-center gap-2 font-semibold transition duration-300 hover:text-brand-gold"
                     >
                         <MessageCircle
@@ -256,7 +307,9 @@ export function Header() {
                     scrolled
                         ? "border-b border-white/90 bg-white/[0.50] shadow-[0_16px_48px_rgba(25,35,35,0.12)] backdrop-blur-xl"
                         : "border-b border-white/55 bg-white/[0.68] shadow-[0_12px_36px_rgba(25,35,35,0.09)] backdrop-blur-xl",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
             >
                 <Container
                     className={[
@@ -265,10 +318,14 @@ export function Header() {
                         scrolled
                             ? "min-h-[64px]"
                             : "min-h-[76px]",
-                    ].join(" ")}
+                    ].join(
+                        " "
+                    )}
                 >
                     <Link
-                        href="/"
+                        href={
+                            localizedHomeHref
+                        }
                         className="
                             relative z-10
                             flex h-[68px] w-[200px]
@@ -280,20 +337,31 @@ export function Header() {
                     >
                         <Image
                             src="/images/brand/logo-dark.png"
-                            alt={siteConfig.name}
-                            width={1800}
-                            height={1216}
+                            alt={
+                                siteConfig.name
+                            }
+                            width={
+                                1800
+                            }
+                            height={
+                                1216
+                            }
                             loading="eager"
                             className={[
                                 "absolute left-0 top-1/2",
                                 "w-auto -translate-y-1/2",
                                 styles.logo,
+
                                 scrolled
                                     ? styles.logoScrolled
                                     : "",
                             ]
-                                .filter(Boolean)
-                                .join(" ")}
+                                .filter(
+                                    Boolean
+                                )
+                                .join(
+                                    " "
+                                )}
                         />
                     </Link>
 
@@ -303,16 +371,25 @@ export function Header() {
                         aria-label="Primary navigation"
                     >
                         {mainNavigation.map(
-                            (item) => {
+                            (
+                                item
+                            ) => {
                                 const active =
                                     isNavigationItemActive(
-                                        pathname,
+                                        localizedPathname,
                                         item
                                     );
 
+                                const itemHref =
+                                    item.href ===
+                                    "/"
+                                        ? localizedHomeHref
+                                        : item.href;
+
                                 const hasChildren =
                                     Boolean(
-                                        item.children?.length
+                                        item.children
+                                            ?.length
                                     );
 
                                 if (
@@ -328,6 +405,9 @@ export function Header() {
                                             }
                                             active={
                                                 active
+                                            }
+                                            href={
+                                                itemHref
                                             }
                                         />
                                     );
@@ -346,6 +426,9 @@ export function Header() {
                                             }
                                             active={
                                                 active
+                                            }
+                                            href={
+                                                itemHref
                                             }
                                             dropdown
                                         />
@@ -395,19 +478,19 @@ export function Header() {
 
                                             <div
                                                 className="
-    relative
-    max-h-[min(72vh,620px)]
-    overflow-y-auto
-    overscroll-contain
-    rounded-[1.5rem]
-    border
-    border-white/95
-    bg-white/95
-    p-2
-    shadow-[0_24px_70px_rgba(20,38,36,0.18)]
-    backdrop-blur-2xl
-    [scrollbar-width:thin]
-"
+                                                    relative
+                                                    max-h-[min(72vh,620px)]
+                                                    overflow-y-auto
+                                                    overscroll-contain
+                                                    rounded-[1.5rem]
+                                                    border
+                                                    border-white/95
+                                                    bg-white/95
+                                                    p-2
+                                                    shadow-[0_24px_70px_rgba(20,38,36,0.18)]
+                                                    backdrop-blur-2xl
+                                                    [scrollbar-width:thin]
+                                                "
                                                 role="menu"
                                             >
                                                 {item.children?.map(
@@ -416,16 +499,14 @@ export function Header() {
                                                     ) => {
                                                         const childActive =
                                                             isLinkActive(
-                                                                pathname,
+                                                                localizedPathname,
                                                                 child.href,
                                                                 child.exact
                                                             );
 
                                                         return (
                                                             <Link
-                                                                key={
-                                                                    `${item.label}-${child.label}`
-                                                                }
+                                                                key={`${item.label}-${child.label}`}
                                                                 href={
                                                                     child.href
                                                                 }
@@ -483,10 +564,16 @@ export function Header() {
                     </nav>
 
                     <div className="hidden items-center gap-2 min-[1360px]:flex">
+                        <LanguageSwitcher
+                            variant="desktop"
+                        />
+
                         <a
-                            href={whatsappUrl}
+                            href={
+                                whatsappUrl
+                            }
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                             aria-label="Chat with Dream Ceylon Journeys on WhatsApp"
                             className={[
                                 "group inline-flex min-h-10 items-center justify-center gap-2 rounded-full",
@@ -494,10 +581,14 @@ export function Header() {
                                 "shadow-[inset_0_1px_0_rgba(255,255,255,1),0_8px_22px_rgba(0,141,134,0.08)] backdrop-blur-xl",
                                 "transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-500/25 hover:bg-white",
                                 "min-[1500px]:px-4 min-[1500px]:text-sm",
-                            ].join(" ")}
+                            ].join(
+                                " "
+                            )}
                         >
                             <MessageCircle
-                                size={17}
+                                size={
+                                    17
+                                }
                                 aria-hidden="true"
                                 className="transition duration-300 group-hover:scale-110"
                             />
@@ -513,12 +604,16 @@ export function Header() {
                                 "shadow-[0_12px_28px_rgba(0,141,134,0.24)] transition duration-300",
                                 "hover:-translate-y-0.5 hover:bg-brand-600",
                                 "min-[1500px]:px-5 min-[1500px]:text-sm",
-                            ].join(" ")}
+                            ].join(
+                                " "
+                            )}
                         >
                             Plan My Journey
 
                             <ChevronRight
-                                size={17}
+                                size={
+                                    17
+                                }
                                 aria-hidden="true"
                                 className="transition duration-300 group-hover:translate-x-0.5"
                             />
@@ -539,14 +634,18 @@ export function Header() {
                             "shadow-[inset_0_1px_0_rgba(255,255,255,1),0_8px_22px_rgba(0,141,134,0.08)] backdrop-blur-xl",
                             "transition-all duration-300 hover:bg-white",
                             "min-[1360px]:hidden",
-                        ].join(" ")}
+                        ].join(
+                            " "
+                        )}
                         aria-label="Open navigation menu"
                         aria-expanded={
                             mobileOpen
                         }
                     >
                         <Menu
-                            size={23}
+                            size={
+                                23
+                            }
                             aria-hidden="true"
                         />
                     </button>
@@ -561,7 +660,9 @@ export function Header() {
                         scrolled
                             ? "opacity-100"
                             : "opacity-35",
-                    ].join(" ")}
+                    ].join(
+                        " "
+                    )}
                 />
             </header>
 
@@ -573,11 +674,11 @@ export function Header() {
                     mobileOpen
                         ? "visible opacity-100"
                         : "invisible opacity-0",
-                ].join(" ")}
-                onClick={() =>
-                    setMobileOpen(
-                        false
-                    )
+                ].join(
+                    " "
+                )}
+                onClick={
+                    closeMobileMenu
                 }
                 aria-hidden="true"
             />
@@ -590,19 +691,36 @@ export function Header() {
                     mobileOpen
                         ? "translate-x-0"
                         : "translate-x-full",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
                 aria-label="Mobile navigation"
                 aria-hidden={
                     !mobileOpen
                 }
             >
                 <div className="flex min-h-[88px] items-center justify-between border-b border-slate-200 px-5">
-                    <div className="relative h-[64px] w-[155px] overflow-visible">
+                    <Link
+                        href={
+                            localizedHomeHref
+                        }
+                        onClick={
+                            closeMobileMenu
+                        }
+                        aria-label={`${siteConfig.name} home`}
+                        className="relative h-[64px] w-[155px] overflow-visible"
+                    >
                         <Image
                             src="/images/brand/logo-dark.png"
-                            alt={siteConfig.name}
-                            width={1800}
-                            height={1216}
+                            alt={
+                                siteConfig.name
+                            }
+                            width={
+                                1800
+                            }
+                            height={
+                                1216
+                            }
                             loading="eager"
                             className="
                                 absolute left-0 top-1/2
@@ -611,20 +729,20 @@ export function Header() {
                                 object-contain
                             "
                         />
-                    </div>
+                    </Link>
 
                     <button
                         type="button"
-                        onClick={() =>
-                            setMobileOpen(
-                                false
-                            )
+                        onClick={
+                            closeMobileMenu
                         }
                         className="inline-flex size-11 items-center justify-center rounded-full bg-brand-50 text-brand-800 transition hover:bg-brand-100"
                         aria-label="Close navigation menu"
                     >
                         <X
-                            size={23}
+                            size={
+                                23
+                            }
                             aria-hidden="true"
                         />
                     </button>
@@ -636,16 +754,25 @@ export function Header() {
                 >
                     <div className="space-y-1.5">
                         {mainNavigation.map(
-                            (item) => {
+                            (
+                                item
+                            ) => {
                                 const active =
                                     isNavigationItemActive(
-                                        pathname,
+                                        localizedPathname,
                                         item
                                     );
 
+                                const itemHref =
+                                    item.href ===
+                                    "/"
+                                        ? localizedHomeHref
+                                        : item.href;
+
                                 const hasChildren =
                                     Boolean(
-                                        item.children?.length
+                                        item.children
+                                            ?.length
                                     );
 
                                 const expanded =
@@ -661,12 +788,10 @@ export function Header() {
                                                 item.label
                                             }
                                             href={
-                                                item.href
+                                                itemHref
                                             }
-                                            onClick={() =>
-                                                setMobileOpen(
-                                                    false
-                                                )
+                                            onClick={
+                                                closeMobileMenu
                                             }
                                             className={[
                                                 "group flex min-h-13 items-center justify-between rounded-2xl border px-4 text-base font-semibold transition-all duration-300",
@@ -771,23 +896,19 @@ export function Header() {
                                                         ) => {
                                                             const childActive =
                                                                 isLinkActive(
-                                                                    pathname,
+                                                                    localizedPathname,
                                                                     child.href,
                                                                     child.exact
                                                                 );
 
                                                             return (
                                                                 <Link
-                                                                    key={
-                                                                        `${item.label}-${child.label}`
-                                                                    }
+                                                                    key={`${item.label}-${child.label}`}
                                                                     href={
                                                                         child.href
                                                                     }
-                                                                    onClick={() =>
-                                                                        setMobileOpen(
-                                                                            false
-                                                                        )
+                                                                    onClick={
+                                                                        closeMobileMenu
                                                                     }
                                                                     className={[
                                                                         "flex items-start justify-between gap-3 rounded-xl px-3 py-3 transition",
@@ -835,6 +956,12 @@ export function Header() {
                         )}
                     </div>
 
+                    <div className="mt-6">
+                        <LanguageSwitcher
+                            variant="mobile"
+                        />
+                    </div>
+
                     <div className="mt-8 overflow-hidden rounded-[1.75rem] bg-[#202526] p-5 text-white shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
                         <div className="h-1 w-12 rounded-full bg-brand-gold" />
 
@@ -864,13 +991,17 @@ export function Header() {
 
                 <div className="border-t border-slate-200 px-5 py-5">
                     <a
-                        href={whatsappUrl}
+                        href={
+                            whatsappUrl
+                        }
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         className="flex min-h-12 items-center justify-center gap-2 rounded-full border border-brand-500/18 bg-brand-50 font-semibold text-brand-800 transition hover:bg-brand-100"
                     >
                         <MessageCircle
-                            size={18}
+                            size={
+                                18
+                            }
                             aria-hidden="true"
                         />
 
@@ -885,15 +1016,19 @@ export function Header() {
 function DesktopNavigationLink({
                                    item,
                                    active,
+                                   href,
                                    dropdown = false,
                                }: {
     item: NavigationItem;
     active: boolean;
+    href: string;
     dropdown?: boolean;
 }) {
     return (
         <Link
-            href={item.href}
+            href={
+                href
+            }
             aria-haspopup={
                 dropdown
                     ? "menu"
@@ -905,7 +1040,9 @@ function DesktopNavigationLink({
                 "min-[1500px]:px-3.5 min-[1500px]:text-[13px]",
                 "text-slate-700 transition-all duration-300",
                 "hover:-translate-y-0.5 hover:text-brand-800",
-            ].join(" ")}
+            ].join(
+                " "
+            )}
         >
             <span
                 aria-hidden="true"
@@ -915,7 +1052,9 @@ function DesktopNavigationLink({
                     "scale-[0.94] shadow-[inset_0_1px_0_rgba(255,255,255,1),0_12px_30px_rgba(0,141,134,0.13)]",
                     "transition-all duration-300",
                     "group-hover:scale-100 group-hover:opacity-100",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
             />
 
             {active ? (
@@ -926,11 +1065,15 @@ function DesktopNavigationLink({
             ) : null}
 
             <span className="relative z-10 inline-flex items-center gap-1">
-                {item.label}
+                {
+                    item.label
+                }
 
                 {dropdown ? (
                     <ChevronDown
-                        size={14}
+                        size={
+                            14
+                        }
                         aria-hidden="true"
                         className="
                             transition-transform
@@ -950,7 +1093,9 @@ function DesktopNavigationLink({
                     active
                         ? "w-6"
                         : "w-0 group-hover:w-6",
-                ].join(" ")}
+                ].join(
+                    " "
+                )}
             />
         </Link>
     );
