@@ -5,6 +5,7 @@ import {
     useEffect,
     useId,
     useState,
+    useSyncExternalStore,
 } from "react";
 
 import {
@@ -35,6 +36,34 @@ type ApiResponse = {
     message?: string;
 };
 
+function subscribeToClientState() {
+    return () => {};
+}
+
+function useIsClient(): boolean {
+    return useSyncExternalStore(
+        subscribeToClientState,
+        () => true,
+        () => false
+    );
+}
+
+function getLocalDateInputValue(): string {
+    const now =
+        new Date();
+
+    const localDate =
+        new Date(
+            now.getTime() -
+            now.getTimezoneOffset() *
+            60_000
+        );
+
+    return localDate
+        .toISOString()
+        .split("T")[0];
+}
+
 export function TourInquiryButton({
                                       packageId,
                                       packageTitle,
@@ -46,10 +75,11 @@ export function TourInquiryButton({
     const dialogTitleId =
         useId();
 
-    const [
-        isMounted,
-        setIsMounted,
-    ] = useState(false);
+    const isClient =
+        useIsClient();
+
+    const minimumTravelDate =
+        getLocalDateInputValue();
 
     const [
         isOpen,
@@ -70,10 +100,6 @@ export function TourInquiryButton({
         errorMessage,
         setErrorMessage,
     ] = useState("");
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     useEffect(() => {
         if (!isOpen) {
@@ -249,7 +275,7 @@ export function TourInquiryButton({
     }
 
     const modal =
-        isMounted &&
+        isClient &&
         isOpen ? (
             <div
                 className="
@@ -777,11 +803,7 @@ export function TourInquiryButton({
                                                 type="date"
                                                 name="travelDate"
                                                 min={
-                                                    new Date()
-                                                        .toISOString()
-                                                        .split(
-                                                            "T"
-                                                        )[0]
+                                                    minimumTravelDate
                                                 }
                                                 className="
                                                     mt-2

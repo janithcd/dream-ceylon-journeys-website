@@ -1,0 +1,97 @@
+{
+  "Common": {
+    "siteName": "Dream Ceylon Journeys",
+    "planJourney": "Plan My Journey",
+    "learnMore": "Learn More",
+    "contactUs": "Contact Us"
+  },
+  "Navigation": {
+    "home": "Home",
+    "tours": "Tours",
+    "multiDayTours": "Multi-Day Tours",
+    "dayTours": "Day Tours",
+    "destinations": "Destinations",
+    "allDestinations": "All Destinations",
+    "sigiriya": "Sigiriya",
+    "dambulla": "Dambulla",
+    "kandy": "Kandy",
+    "nuwaraEliya": "Nuwara Eliya",
+    "ella": "Ella",
+    "yala": "Yala",
+    "mirissa": "Mirissa",
+    "galle": "Galle",
+    "anuradhapura": "Anuradhapura",
+    "polonnaruwa": "Polonnaruwa",
+    "trincomalee": "Trincomalee",
+    "experiences": "Experiences",
+    "vehicles": "Vehicles",
+    "allVehicles": "All Vehicles",
+    "comfortableAcCar": "Comfortable A/C Car",
+    "premiumSuv": "Premium SUV",
+    "spaciousTourVan": "Spacious Tour Van",
+    "about": "About",
+    "contact": "Contact",
+    "descriptions": {
+      "multiDayTours": "Browse private multi-day Sri Lanka tours and sample itineraries.",
+      "dayTours": "Explore private full-day experiences with a chauffeur-guide.",
+      "allDestinations": "Explore cultural cities, hill country, wildlife areas and beaches.",
+      "allVehicles": "Browse all private vehicles available for Sri Lanka tours.",
+      "comfortableAcCar": "A private car for couples and small families.",
+      "premiumSuv": "Additional comfort and luggage space for small groups.",
+      "spaciousTourVan": "A comfortable option for families and larger groups."
+    }
+  },
+  "Header": {
+    "primaryNavigation": "Primary navigation",
+    "mobileNavigation": "Mobile primary navigation",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "localDmc": "Local Sri Lanka DMC",
+    "chatWithExpert": "Chat with a local travel expert",
+    "whatsapp": "WhatsApp",
+    "planJourney": "Plan My Journey",
+    "startPlanning": "Start planning",
+    "storyBegins": "Your Sri Lanka story begins here.",
+    "planningDescription": "Speak directly with a local tour expert and create a journey around your interests.",
+    "whatsappTeam": "WhatsApp Our Team"
+  },
+  "Footer": {
+    "description": "Thoughtfully designed private journeys across Sri Lanka, created by local experts who know the island beyond the guidebooks.",
+    "exploreTitle": "Explore",
+    "companyTitle": "Company",
+    "contactTitle": "Contact",
+    "chatWhatsapp": "Chat on WhatsApp",
+    "rights": "All rights reserved.",
+    "designedBy": "Designed and developed by Janith Dasanayaka",
+    "links": {
+      "destinations": "Sri Lanka Destinations",
+      "privateTours": "Private Tour Packages",
+      "dayTours": "Sri Lanka Day Tours",
+      "gallery": "Tour Gallery",
+      "vehicles": "Our Vehicles",
+      "about": "About Dream Ceylon",
+      "whyUs": "Why Travel With Us",
+      "contact": "Contact Us",
+      "planJourney": "Plan Your Journey",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions"
+    }
+  },
+  "LanguageSwitcher": {
+    "language": "Language",
+    "english": "English",
+    "german": "Deutsch"
+  },
+  "LocaleTest": {
+    "badge": "English is active",
+    "title": "The multilingual foundation is working.",
+    "description": "Dream Ceylon Journeys is now ready to load content according to the selected language.",
+    "statusTitle": "Locale configuration successful",
+    "statusDescription": "English remains the default language without a URL prefix.",
+    "englishButton": "Open English Website",
+    "metadata": {
+      "title": "Dream Ceylon Journeys",
+      "description": "Private tailor-made Sri Lanka journeys designed by local travel experts."
+    }
+  }
+}

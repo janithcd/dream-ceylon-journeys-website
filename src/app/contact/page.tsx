@@ -1294,18 +1294,3 @@ export default function ContactPage() {
     );
 }
 
-function CalendarDaysIcon({
-                              className,
-                              ...props
-                          }: React.ComponentProps<
-    typeof Clock3
->) {
-    return (
-        <Clock3
-            className={
-                className
-            }
-            {...props}
-        />
-    );
-}

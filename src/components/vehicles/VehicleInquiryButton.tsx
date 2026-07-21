@@ -5,6 +5,7 @@ import {
     useEffect,
     useId,
     useState,
+    useSyncExternalStore,
 } from "react";
 
 import {
@@ -12,7 +13,6 @@ import {
 } from "react-dom";
 
 import {
-    CalendarDays,
     CarFront,
     CheckCircle2,
     LoaderCircle,
@@ -36,6 +36,34 @@ type ApiResponse = {
     message?: string;
 };
 
+function subscribeToClientState() {
+    return () => {};
+}
+
+function useIsClient(): boolean {
+    return useSyncExternalStore(
+        subscribeToClientState,
+        () => true,
+        () => false
+    );
+}
+
+function getLocalDateInputValue(): string {
+    const now =
+        new Date();
+
+    const localDate =
+        new Date(
+            now.getTime() -
+            now.getTimezoneOffset() *
+            60_000
+        );
+
+    return localDate
+        .toISOString()
+        .split("T")[0];
+}
+
 export function VehicleInquiryButton({
                                          vehicleId,
                                          vehicleName,
@@ -48,10 +76,11 @@ export function VehicleInquiryButton({
     const dialogTitleId =
         useId();
 
-    const [
-        isMounted,
-        setIsMounted,
-    ] = useState(false);
+    const isClient =
+        useIsClient();
+
+    const minimumTravelDate =
+        getLocalDateInputValue();
 
     const [
         isOpen,
@@ -72,10 +101,6 @@ export function VehicleInquiryButton({
         errorMessage,
         setErrorMessage,
     ] = useState("");
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     useEffect(() => {
         if (!isOpen) {
@@ -254,7 +279,7 @@ export function VehicleInquiryButton({
     }
 
     const modal =
-        isMounted &&
+        isClient &&
         isOpen ? (
             <div
                 className="
@@ -719,6 +744,9 @@ export function VehicleInquiryButton({
                                             <input
                                                 type="date"
                                                 name="travelDate"
+                                                min={
+                                                    minimumTravelDate
+                                                }
                                                 className="
                                                     mt-2 min-h-12 w-full
                                                     rounded-2xl

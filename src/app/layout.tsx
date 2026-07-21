@@ -4,6 +4,15 @@ import type {
 } from "next";
 
 import {
+  NextIntlClientProvider,
+} from "next-intl";
+
+import {
+  getLocale,
+  getMessages,
+} from "next-intl/server";
+
+import {
   Manrope,
   Playfair_Display,
 } from "next/font/google";
@@ -30,17 +39,18 @@ import {
 
 import "./globals.css";
 
-const manrope = Manrope({
-  subsets: [
-    "latin",
-  ],
+const manrope =
+    Manrope({
+      subsets: [
+        "latin",
+      ],
 
-  display:
-      "swap",
+      display:
+          "swap",
 
-  variable:
-      "--font-manrope",
-});
+      variable:
+          "--font-manrope",
+    });
 
 const playfair =
     Playfair_Display({
@@ -83,7 +93,9 @@ const isPublicProductionSite =
 export const metadata:
     Metadata = {
   metadataBase:
-      new URL(siteUrl),
+      new URL(
+          siteUrl
+      ),
 
   title: {
     default:
@@ -296,155 +308,177 @@ export const viewport:
   ],
 };
 
-const organizationJsonLd = {
-  "@context":
-      "https://schema.org",
+function createOrganizationJsonLd(
+    locale: string
+) {
+  return {
+    "@context":
+        "https://schema.org",
 
-  "@graph": [
-    {
-      "@type": [
-        "Organization",
-        "TravelAgency",
-      ],
+    "@graph": [
+      {
+        "@type": [
+          "Organization",
+          "TravelAgency",
+        ],
 
-      "@id":
-          `${siteUrl}/#organization`,
-
-      name:
-          "Dream Ceylon Journeys",
-
-      alternateName:
-          "Dream Ceylon Journeys Sri Lanka",
-
-      url:
-      siteUrl,
-
-      logo: {
-        "@type":
-            "ImageObject",
-
-        url:
-            `${siteUrl}/images/brand/logo-dark.png`,
-      },
-
-      image:
-          `${siteUrl}${defaultSocialImage}`,
-
-      description:
-      defaultDescription,
-
-      email:
-          "info@dreamceylonjourneys.com",
-
-      telephone:
-          "+94775124645",
-
-      address: {
-        "@type":
-            "PostalAddress",
-
-        streetAddress:
-            "89/2 Malwatta Road, Hokandara South",
-
-        addressLocality:
-            "Hokandara",
-
-        addressRegion:
-            "Western Province",
-
-        addressCountry:
-            "LK",
-      },
-
-      contactPoint: [
-        {
-          "@type":
-              "ContactPoint",
-
-          telephone:
-              "+94775124645",
-
-          contactType:
-              "customer service",
-
-          availableLanguage: [
-            "English",
-          ],
-        },
-        {
-          "@type":
-              "ContactPoint",
-
-          telephone:
-              "+94766550304",
-
-          contactType:
-              "customer service",
-
-          availableLanguage: [
-            "English",
-          ],
-        },
-      ],
-
-      areaServed: {
-        "@type":
-            "Country",
-
-        name:
-            "Sri Lanka",
-      },
-
-      knowsAbout: [
-        "Private Sri Lanka tours",
-        "Tailor-made Sri Lanka holidays",
-        "Sri Lanka chauffeur-guide services",
-        "Sri Lanka airport transfers",
-        "Sri Lanka wildlife tours",
-        "Sri Lanka cultural tours",
-        "Sri Lanka beach holidays",
-        "Destination management services",
-      ],
-    },
-    {
-      "@type":
-          "WebSite",
-
-      "@id":
-          `${siteUrl}/#website`,
-
-      url:
-      siteUrl,
-
-      name:
-      siteConfig.name,
-
-      alternateName:
-          "Dream Ceylon Journeys Sri Lanka",
-
-      description:
-      defaultDescription,
-
-      inLanguage:
-          "en",
-
-      publisher: {
         "@id":
             `${siteUrl}/#organization`,
-      },
-    },
-  ],
-};
 
-export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
+        name:
+            "Dream Ceylon Journeys",
+
+        alternateName:
+            "Dream Ceylon Journeys Sri Lanka",
+
+        url:
+        siteUrl,
+
+        logo: {
+          "@type":
+              "ImageObject",
+
+          url:
+              `${siteUrl}/images/brand/logo-dark.png`,
+        },
+
+        image:
+            `${siteUrl}${defaultSocialImage}`,
+
+        description:
+        defaultDescription,
+
+        email:
+        siteConfig.email,
+
+        telephone:
+        siteConfig.phone,
+
+        address: {
+          "@type":
+              "PostalAddress",
+
+          streetAddress:
+              "89/2 Malwatta Road, Hokandara South",
+
+          addressLocality:
+              "Hokandara",
+
+          addressRegion:
+              "Western Province",
+
+          addressCountry:
+              "LK",
+        },
+
+        contactPoint: [
+          {
+            "@type":
+                "ContactPoint",
+
+            telephone:
+                "+94775124645",
+
+            contactType:
+                "customer service",
+
+            availableLanguage: [
+              "English",
+              "German",
+            ],
+          },
+          {
+            "@type":
+                "ContactPoint",
+
+            telephone:
+                "+94766550304",
+
+            contactType:
+                "customer service",
+
+            availableLanguage: [
+              "English",
+              "German",
+            ],
+          },
+        ],
+
+        areaServed: {
+          "@type":
+              "Country",
+
+          name:
+              "Sri Lanka",
+        },
+
+        knowsAbout: [
+          "Private Sri Lanka tours",
+          "Tailor-made Sri Lanka holidays",
+          "Sri Lanka chauffeur-guide services",
+          "Sri Lanka airport transfers",
+          "Sri Lanka wildlife tours",
+          "Sri Lanka cultural tours",
+          "Sri Lanka beach holidays",
+          "Destination management services",
+        ],
+      },
+      {
+        "@type":
+            "WebSite",
+
+        "@id":
+            `${siteUrl}/#website`,
+
+        url:
+        siteUrl,
+
+        name:
+        siteConfig.name,
+
+        alternateName:
+            "Dream Ceylon Journeys Sri Lanka",
+
+        description:
+        defaultDescription,
+
+        inLanguage:
+        locale,
+
+        publisher: {
+          "@id":
+              `${siteUrl}/#organization`,
+        },
+      },
+    ],
+  };
+}
+
+export default async function RootLayout({
+                                           children,
+                                         }: Readonly<{
   children:
       React.ReactNode;
 }>) {
+  const [
+    locale,
+    messages,
+  ] =
+      await Promise.all([
+        getLocale(),
+        getMessages(),
+      ]);
+
+  const organizationJsonLd =
+      createOrganizationJsonLd(
+          locale
+      );
+
   return (
       <html
-          lang="en"
+          lang={
+            locale
+          }
           data-scroll-behavior="smooth"
           className={`${manrope.variable} ${playfair.variable}`}
       >
@@ -457,35 +491,39 @@ export default function RootLayout({
                     antialiased
                 "
       >
-      <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html:
-                JSON.stringify(
-                    organizationJsonLd
-                ).replace(
-                    /</g,
-                    "\\u003c"
-                ),
-          }}
-      />
+      <NextIntlClientProvider
+          locale={
+            locale
+          }
+          messages={
+            messages
+          }
+      >
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html:
+                  JSON.stringify(
+                      organizationJsonLd
+                  ).replace(
+                      /</g,
+                      "\\u003c"
+                  ),
+            }}
+        />
 
-      <Header />
+        <Header />
 
-      {/*
-                    Individual pages already use their
-                    own <main> element, so the root
-                    layout must not add another <main>.
-                */}
-      <div id="site-content">
-        {children}
-      </div>
+        <div id="site-content">
+          {children}
+        </div>
 
-      <Footer />
+        <Footer />
 
-      <FloatingContact />
+        <FloatingContact />
 
-      <TravelAssistant />
+        <TravelAssistant />
+      </NextIntlClientProvider>
       </body>
       </html>
   );

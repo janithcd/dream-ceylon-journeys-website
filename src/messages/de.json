@@ -1,0 +1,97 @@
+{
+  "Common": {
+    "siteName": "Dream Ceylon Journeys",
+    "planJourney": "Meine Reise planen",
+    "learnMore": "Mehr erfahren",
+    "contactUs": "Kontakt"
+  },
+  "Navigation": {
+    "home": "Startseite",
+    "tours": "Rundreisen",
+    "multiDayTours": "Mehrtägige Rundreisen",
+    "dayTours": "Tagestouren",
+    "destinations": "Reiseziele",
+    "allDestinations": "Alle Reiseziele",
+    "sigiriya": "Sigiriya",
+    "dambulla": "Dambulla",
+    "kandy": "Kandy",
+    "nuwaraEliya": "Nuwara Eliya",
+    "ella": "Ella",
+    "yala": "Yala",
+    "mirissa": "Mirissa",
+    "galle": "Galle",
+    "anuradhapura": "Anuradhapura",
+    "polonnaruwa": "Polonnaruwa",
+    "trincomalee": "Trincomalee",
+    "experiences": "Erlebnisse",
+    "vehicles": "Fahrzeuge",
+    "allVehicles": "Alle Fahrzeuge",
+    "comfortableAcCar": "Komfortabler klimatisierter Pkw",
+    "premiumSuv": "Premium-SUV",
+    "spaciousTourVan": "Geräumiger Reisevan",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "descriptions": {
+      "multiDayTours": "Entdecken Sie private, mehrtägige Sri-Lanka-Rundreisen und Beispielrouten.",
+      "dayTours": "Entdecken Sie private Ganztagesausflüge mit einem Chauffeur-Guide.",
+      "allDestinations": "Entdecken Sie Kulturstädte, das Hochland, Wildnisgebiete und Strände.",
+      "allVehicles": "Entdecken Sie alle privaten Fahrzeuge für Ihre Sri-Lanka-Reise.",
+      "comfortableAcCar": "Ein privater Pkw für Paare und kleine Familien.",
+      "premiumSuv": "Zusätzlicher Komfort und mehr Gepäckraum für kleine Gruppen.",
+      "spaciousTourVan": "Eine komfortable Option für Familien und größere Gruppen."
+    }
+  },
+  "Header": {
+    "primaryNavigation": "Hauptnavigation",
+    "mobileNavigation": "Mobile Hauptnavigation",
+    "openMenu": "Navigationsmenü öffnen",
+    "closeMenu": "Navigationsmenü schließen",
+    "localDmc": "Lokale DMC in Sri Lanka",
+    "chatWithExpert": "Mit einem lokalen Reiseexperten sprechen",
+    "whatsapp": "WhatsApp",
+    "planJourney": "Meine Reise planen",
+    "startPlanning": "Reiseplanung starten",
+    "storyBegins": "Ihre Sri-Lanka-Reise beginnt hier.",
+    "planningDescription": "Sprechen Sie direkt mit einem lokalen Reiseexperten und gestalten Sie eine Reise nach Ihren Interessen.",
+    "whatsappTeam": "Unser Team auf WhatsApp"
+  },
+  "Footer": {
+    "description": "Sorgfältig geplante Privatreisen durch Sri Lanka, gestaltet von lokalen Experten, die die Insel weit über die Reiseführer hinaus kennen.",
+    "exploreTitle": "Entdecken",
+    "companyTitle": "Unternehmen",
+    "contactTitle": "Kontakt",
+    "chatWhatsapp": "Über WhatsApp kontaktieren",
+    "rights": "Alle Rechte vorbehalten.",
+    "designedBy": "Entworfen und entwickelt von Janith Dasanayaka",
+    "links": {
+      "destinations": "Reiseziele in Sri Lanka",
+      "privateTours": "Private Rundreisen",
+      "dayTours": "Sri-Lanka-Tagestouren",
+      "gallery": "Reisegalerie",
+      "vehicles": "Unsere Fahrzeuge",
+      "about": "Über Dream Ceylon",
+      "whyUs": "Warum mit uns reisen",
+      "contact": "Kontakt",
+      "planJourney": "Reise planen",
+      "privacy": "Datenschutzerklärung",
+      "terms": "Allgemeine Geschäftsbedingungen"
+    }
+  },
+  "LanguageSwitcher": {
+    "language": "Sprache",
+    "english": "English",
+    "german": "Deutsch"
+  },
+  "LocaleTest": {
+    "badge": "Deutsch ist aktiviert",
+    "title": "Die mehrsprachige Grundlage funktioniert.",
+    "description": "Dream Ceylon Journeys kann jetzt Inhalte entsprechend der ausgewählten Sprache laden.",
+    "statusTitle": "Sprachkonfiguration erfolgreich",
+    "statusDescription": "Die deutsche Version verwendet ein eigenes, suchmaschinenfreundliches URL-Verzeichnis.",
+    "englishButton": "Englische Website öffnen",
+    "metadata": {
+      "title": "Private Sri-Lanka-Rundreisen",
+      "description": "Individuelle Sri-Lanka-Reisen, private Rundreisen und maßgeschneiderte Reiseplanung mit lokalen Experten."
+    }
+  }
+}

@@ -26,6 +26,11 @@ import {
 } from "react";
 
 import {
+    useLocale,
+    useTranslations,
+} from "next-intl";
+
+import {
     LanguageSwitcher,
 } from "@/components/layout/LanguageSwitcher";
 
@@ -47,10 +52,24 @@ import {
     whatsappUrl,
 } from "@/lib/site";
 
+/*
+ * Add paths here only after their
+ * German versions have been created.
+ *
+ * At the moment only the homepage
+ * exists in German.
+ */
+const germanPublishedPaths =
+    new Set<string>([
+        "/",
+    ]);
+
 function normalizePath(
     value: string
 ): string {
-    if (value === "/") {
+    if (
+        value === "/"
+    ) {
         return "/";
     }
 
@@ -75,12 +94,86 @@ function removeLocalePrefix(
         )
     ) {
         return (
-            pathname.slice(3) ||
-            "/"
+            pathname.slice(
+                3
+            ) || "/"
         );
     }
 
     return pathname;
+}
+
+function splitInternalHref(
+    href: string
+): {
+    pathname: string;
+    suffix: string;
+} {
+    const match =
+        href.match(
+            /^([^?#]*)(.*)$/
+        );
+
+    return {
+        pathname:
+            match?.[1] ||
+            "/",
+
+        suffix:
+            match?.[2] ||
+            "",
+    };
+}
+
+function getLocalizedHref(
+    href: string,
+    locale: string
+): string {
+    /*
+     * External URLs, telephone links
+     * and email links remain unchanged.
+     */
+    if (
+        !href.startsWith(
+            "/"
+        )
+    ) {
+        return href;
+    }
+
+    if (
+        locale !== "de"
+    ) {
+        return href;
+    }
+
+    const {
+        pathname,
+        suffix,
+    } =
+        splitInternalHref(
+            href
+        );
+
+    /*
+     * Do not generate a German URL
+     * until that translated page exists.
+     */
+    if (
+        !germanPublishedPaths.has(
+            pathname
+        )
+    ) {
+        return href;
+    }
+
+    if (
+        pathname === "/"
+    ) {
+        return `/de${suffix}`;
+    }
+
+    return `/de${pathname}${suffix}`;
 }
 
 function isLinkActive(
@@ -122,7 +215,8 @@ function isNavigationItemActive(
     item: NavigationItem
 ): boolean {
     const activePaths =
-        item.activePaths?.length
+        item.activePaths
+            ?.length
             ? item.activePaths
             : [
                 item.href,
@@ -144,18 +238,33 @@ export function Header() {
     const pathname =
         usePathname();
 
+    const locale =
+        useLocale();
+
+    const tNavigation =
+        useTranslations(
+            "Navigation"
+        ) as (
+            key: string
+        ) => string;
+
+    const tHeader =
+        useTranslations(
+            "Header"
+        ) as (
+            key: string
+        ) => string;
+
     const localizedPathname =
         removeLocalePrefix(
             pathname
         );
 
     const localizedHomeHref =
-        pathname === "/de" ||
-        pathname.startsWith(
-            "/de/"
-        )
-            ? "/de"
-            : "/";
+        getLocalizedHref(
+            "/",
+            locale
+        );
 
     const [
         mobileOpen,
@@ -178,7 +287,8 @@ export function Header() {
         useState(false);
 
     const isHome =
-        localizedPathname === "/";
+        localizedPathname ===
+        "/";
 
     useEffect(() => {
         const handleScroll =
@@ -195,7 +305,8 @@ export function Header() {
             "scroll",
             handleScroll,
             {
-                passive: true,
+                passive:
+                    true,
             }
         );
 
@@ -219,6 +330,10 @@ export function Header() {
         };
 
     useEffect(() => {
+        const previousOverflow =
+            document.body.style
+                .overflow;
+
         document.body.style.overflow =
             mobileOpen
                 ? "hidden"
@@ -226,7 +341,7 @@ export function Header() {
 
         return () => {
             document.body.style.overflow =
-                "";
+                previousOverflow;
         };
     }, [
         mobileOpen,
@@ -234,7 +349,7 @@ export function Header() {
 
     return (
         <>
-            {/* Non-sticky contact row */}
+            {/* Top contact bar */}
             <div className="relative z-[60] hidden min-h-[34px] bg-brand-500 text-white lg:block">
                 <Container className="flex min-h-[34px] items-center justify-between gap-6 text-[11px]">
                     <div className="flex items-center gap-6 text-white/92">
@@ -243,7 +358,9 @@ export function Header() {
                             className="inline-flex items-center gap-2 transition duration-300 hover:text-brand-gold"
                         >
                             <Mail
-                                size={13}
+                                size={
+                                    13
+                                }
                                 aria-hidden="true"
                             />
 
@@ -257,7 +374,9 @@ export function Header() {
                             className="inline-flex items-center gap-2 transition duration-300 hover:text-brand-gold"
                         >
                             <Phone
-                                size={13}
+                                size={
+                                    13
+                                }
                                 aria-hidden="true"
                             />
 
@@ -268,11 +387,15 @@ export function Header() {
 
                         <span className="inline-flex items-center gap-2">
                             <MapPin
-                                size={13}
+                                size={
+                                    13
+                                }
                                 aria-hidden="true"
                             />
 
-                            Local Sri Lanka DMC
+                            {tHeader(
+                                "localDmc"
+                            )}
                         </span>
                     </div>
 
@@ -285,17 +408,21 @@ export function Header() {
                         className="group inline-flex items-center gap-2 font-semibold transition duration-300 hover:text-brand-gold"
                     >
                         <MessageCircle
-                            size={13}
+                            size={
+                                13
+                            }
                             aria-hidden="true"
                             className="transition duration-300 group-hover:scale-110"
                         />
 
-                        Chat with a local travel expert
+                        {tHeader(
+                            "chatWithExpert"
+                        )}
                     </a>
                 </Container>
             </div>
 
-            {/* Sticky white glass navigation */}
+            {/* Sticky navigation */}
             <header
                 className={[
                     "sticky top-0 z-50 transition-all duration-500",
@@ -333,7 +460,9 @@ export function Header() {
                             overflow-visible
                             max-sm:w-[150px]
                         "
-                        aria-label={`${siteConfig.name} home`}
+                        aria-label={`${siteConfig.name} ${tNavigation(
+                            "home"
+                        )}`}
                     >
                         <Image
                             src="/images/brand/logo-dark.png"
@@ -368,7 +497,9 @@ export function Header() {
                     {/* Desktop navigation */}
                     <nav
                         className="hidden items-center gap-0.5 min-[1360px]:flex min-[1600px]:gap-1"
-                        aria-label="Primary navigation"
+                        aria-label={tHeader(
+                            "primaryNavigation"
+                        )}
                     >
                         {mainNavigation.map(
                             (
@@ -380,11 +511,18 @@ export function Header() {
                                         item
                                     );
 
+                                const label =
+                                    item.labelKey
+                                        ? tNavigation(
+                                            item.labelKey
+                                        )
+                                        : item.label;
+
                                 const itemHref =
-                                    item.href ===
-                                    "/"
-                                        ? localizedHomeHref
-                                        : item.href;
+                                    getLocalizedHref(
+                                        item.href,
+                                        locale
+                                    );
 
                                 const hasChildren =
                                     Boolean(
@@ -398,16 +536,16 @@ export function Header() {
                                     return (
                                         <DesktopNavigationLink
                                             key={
-                                                item.label
+                                                item.href
                                             }
-                                            item={
-                                                item
-                                            }
-                                            active={
-                                                active
+                                            label={
+                                                label
                                             }
                                             href={
                                                 itemHref
+                                            }
+                                            active={
+                                                active
                                             }
                                         />
                                     );
@@ -416,19 +554,19 @@ export function Header() {
                                 return (
                                     <div
                                         key={
-                                            item.label
+                                            item.href
                                         }
                                         className="group relative"
                                     >
                                         <DesktopNavigationLink
-                                            item={
-                                                item
-                                            }
-                                            active={
-                                                active
+                                            label={
+                                                label
                                             }
                                             href={
                                                 itemHref
+                                            }
+                                            active={
+                                                active
                                             }
                                             dropdown
                                         />
@@ -504,11 +642,31 @@ export function Header() {
                                                                 child.exact
                                                             );
 
+                                                        const childLabel =
+                                                            child.labelKey
+                                                                ? tNavigation(
+                                                                    child.labelKey
+                                                                )
+                                                                : child.label;
+
+                                                        const childDescription =
+                                                            child.descriptionKey
+                                                                ? tNavigation(
+                                                                    child.descriptionKey
+                                                                )
+                                                                : child.description;
+
+                                                        const childHref =
+                                                            getLocalizedHref(
+                                                                child.href,
+                                                                locale
+                                                            );
+
                                                         return (
                                                             <Link
-                                                                key={`${item.label}-${child.label}`}
+                                                                key={`${item.href}-${child.href}`}
                                                                 href={
-                                                                    child.href
+                                                                    childHref
                                                                 }
                                                                 role="menuitem"
                                                                 className={[
@@ -524,14 +682,14 @@ export function Header() {
                                                                 <span>
                                                                     <span className="block text-sm font-bold">
                                                                         {
-                                                                            child.label
+                                                                            childLabel
                                                                         }
                                                                     </span>
 
-                                                                    {child.description ? (
+                                                                    {childDescription ? (
                                                                         <span className="mt-1 block text-xs leading-5 text-slate-500">
                                                                             {
-                                                                                child.description
+                                                                                childDescription
                                                                             }
                                                                         </span>
                                                                     ) : null}
@@ -563,6 +721,7 @@ export function Header() {
                         )}
                     </nav>
 
+                    {/* Desktop actions */}
                     <div className="hidden items-center gap-2 min-[1360px]:flex">
                         <LanguageSwitcher
                             variant="desktop"
@@ -574,7 +733,9 @@ export function Header() {
                             }
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label="Chat with Dream Ceylon Journeys on WhatsApp"
+                            aria-label={tHeader(
+                                "chatWithExpert"
+                            )}
                             className={[
                                 "group inline-flex min-h-10 items-center justify-center gap-2 rounded-full",
                                 "border border-white/90 bg-white/[0.68] px-3 text-[12px] font-semibold text-brand-800",
@@ -593,13 +754,18 @@ export function Header() {
                                 className="transition duration-300 group-hover:scale-110"
                             />
 
-                            WhatsApp
+                            {tHeader(
+                                "whatsapp"
+                            )}
                         </a>
 
                         <Link
-                            href="/plan-your-tour"
+                            href={getLocalizedHref(
+                                "/plan-your-tour",
+                                locale
+                            )}
                             className={[
-                                "group inline-flex min-h-10 items-center justify-center gap-2 rounded-full",
+                                "group inline-flex min-h-10 items-center justify-center gap-2 rounded-full whitespace-nowrap",
                                 "bg-brand-500 px-4 text-[12px] font-bold text-white",
                                 "shadow-[0_12px_28px_rgba(0,141,134,0.24)] transition duration-300",
                                 "hover:-translate-y-0.5 hover:bg-brand-600",
@@ -608,7 +774,9 @@ export function Header() {
                                 " "
                             )}
                         >
-                            Plan My Journey
+                            {tHeader(
+                                "planJourney"
+                            )}
 
                             <ChevronRight
                                 size={
@@ -620,7 +788,7 @@ export function Header() {
                         </Link>
                     </div>
 
-                    {/* Laptop and mobile menu button */}
+                    {/* Mobile menu button */}
                     <button
                         type="button"
                         onClick={() =>
@@ -637,7 +805,9 @@ export function Header() {
                         ].join(
                             " "
                         )}
-                        aria-label="Open navigation menu"
+                        aria-label={tHeader(
+                            "openMenu"
+                        )}
                         aria-expanded={
                             mobileOpen
                         }
@@ -694,7 +864,9 @@ export function Header() {
                 ].join(
                     " "
                 )}
-                aria-label="Mobile navigation"
+                aria-label={tHeader(
+                    "mobileNavigation"
+                )}
                 aria-hidden={
                     !mobileOpen
                 }
@@ -707,7 +879,9 @@ export function Header() {
                         onClick={
                             closeMobileMenu
                         }
-                        aria-label={`${siteConfig.name} home`}
+                        aria-label={`${siteConfig.name} ${tNavigation(
+                            "home"
+                        )}`}
                         className="relative h-[64px] w-[155px] overflow-visible"
                     >
                         <Image
@@ -737,7 +911,9 @@ export function Header() {
                             closeMobileMenu
                         }
                         className="inline-flex size-11 items-center justify-center rounded-full bg-brand-50 text-brand-800 transition hover:bg-brand-100"
-                        aria-label="Close navigation menu"
+                        aria-label={tHeader(
+                            "closeMenu"
+                        )}
                     >
                         <X
                             size={
@@ -750,7 +926,9 @@ export function Header() {
 
                 <nav
                     className="flex-1 overflow-y-auto px-5 py-6"
-                    aria-label="Mobile primary navigation"
+                    aria-label={tHeader(
+                        "mobileNavigation"
+                    )}
                 >
                     <div className="space-y-1.5">
                         {mainNavigation.map(
@@ -763,11 +941,18 @@ export function Header() {
                                         item
                                     );
 
+                                const label =
+                                    item.labelKey
+                                        ? tNavigation(
+                                            item.labelKey
+                                        )
+                                        : item.label;
+
                                 const itemHref =
-                                    item.href ===
-                                    "/"
-                                        ? localizedHomeHref
-                                        : item.href;
+                                    getLocalizedHref(
+                                        item.href,
+                                        locale
+                                    );
 
                                 const hasChildren =
                                     Boolean(
@@ -777,7 +962,7 @@ export function Header() {
 
                                 const expanded =
                                     expandedMobileItem ===
-                                    item.label;
+                                    item.href;
 
                                 if (
                                     !hasChildren
@@ -785,7 +970,7 @@ export function Header() {
                                     return (
                                         <Link
                                             key={
-                                                item.label
+                                                item.href
                                             }
                                             href={
                                                 itemHref
@@ -804,7 +989,7 @@ export function Header() {
                                             )}
                                         >
                                             {
-                                                item.label
+                                                label
                                             }
 
                                             <ChevronRight
@@ -821,7 +1006,7 @@ export function Header() {
                                 return (
                                     <div
                                         key={
-                                            item.label
+                                            item.href
                                         }
                                         className="
                                             overflow-hidden
@@ -838,9 +1023,9 @@ export function Header() {
                                                         current
                                                     ) =>
                                                         current ===
-                                                        item.label
+                                                        item.href
                                                             ? null
-                                                            : item.label
+                                                            : item.href
                                                 )
                                             }
                                             className={[
@@ -857,7 +1042,7 @@ export function Header() {
                                             }
                                         >
                                             {
-                                                item.label
+                                                label
                                             }
 
                                             <ChevronDown
@@ -901,11 +1086,31 @@ export function Header() {
                                                                     child.exact
                                                                 );
 
+                                                            const childLabel =
+                                                                child.labelKey
+                                                                    ? tNavigation(
+                                                                        child.labelKey
+                                                                    )
+                                                                    : child.label;
+
+                                                            const childDescription =
+                                                                child.descriptionKey
+                                                                    ? tNavigation(
+                                                                        child.descriptionKey
+                                                                    )
+                                                                    : child.description;
+
+                                                            const childHref =
+                                                                getLocalizedHref(
+                                                                    child.href,
+                                                                    locale
+                                                                );
+
                                                             return (
                                                                 <Link
-                                                                    key={`${item.label}-${child.label}`}
+                                                                    key={`${item.href}-${child.href}`}
                                                                     href={
-                                                                        child.href
+                                                                        childHref
                                                                     }
                                                                     onClick={
                                                                         closeMobileMenu
@@ -923,14 +1128,14 @@ export function Header() {
                                                                     <span>
                                                                         <span className="block text-sm font-bold">
                                                                             {
-                                                                                child.label
+                                                                                childLabel
                                                                             }
                                                                         </span>
 
-                                                                        {child.description ? (
+                                                                        {childDescription ? (
                                                                             <span className="mt-1 block text-xs leading-5 text-slate-500">
                                                                                 {
-                                                                                    child.description
+                                                                                    childDescription
                                                                                 }
                                                                             </span>
                                                                         ) : null}
@@ -966,25 +1171,33 @@ export function Header() {
                         <div className="h-1 w-12 rounded-full bg-brand-gold" />
 
                         <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
-                            Start planning
+                            {tHeader(
+                                "startPlanning"
+                            )}
                         </p>
 
                         <p className="mt-3 font-display text-2xl font-semibold">
-                            Your Sri Lanka story begins
-                            here.
+                            {tHeader(
+                                "storyBegins"
+                            )}
                         </p>
 
                         <p className="mt-3 text-sm leading-6 text-white/65">
-                            Speak directly with a local
-                            tour expert and create a
-                            journey around your interests.
+                            {tHeader(
+                                "planningDescription"
+                            )}
                         </p>
 
                         <ButtonLink
-                            href="/plan-your-tour"
+                            href={getLocalizedHref(
+                                "/plan-your-tour",
+                                locale
+                            )}
                             className="mt-5 w-full"
                         >
-                            Plan My Journey
+                            {tHeader(
+                                "planJourney"
+                            )}
                         </ButtonLink>
                     </div>
                 </nav>
@@ -1005,7 +1218,9 @@ export function Header() {
                             aria-hidden="true"
                         />
 
-                        WhatsApp Our Team
+                        {tHeader(
+                            "whatsappTeam"
+                        )}
                     </a>
                 </div>
             </aside>
@@ -1014,12 +1229,12 @@ export function Header() {
 }
 
 function DesktopNavigationLink({
-                                   item,
+                                   label,
                                    active,
                                    href,
                                    dropdown = false,
                                }: {
-    item: NavigationItem;
+    label: string;
     active: boolean;
     href: string;
     dropdown?: boolean;
@@ -1066,7 +1281,7 @@ function DesktopNavigationLink({
 
             <span className="relative z-10 inline-flex items-center gap-1">
                 {
-                    item.label
+                    label
                 }
 
                 {dropdown ? (

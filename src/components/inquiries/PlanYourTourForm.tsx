@@ -2,7 +2,7 @@
 
 import {
     type FormEvent,
-    useEffect,
+    useMemo,
     useState,
 } from "react";
 
@@ -182,10 +182,22 @@ export function PlanYourTourForm({
                                      initialVehicleId = "",
                                      initialDestinationIds = [],
                                  }: PlanYourTourFormProps) {
-    const [
-        today,
-        setToday,
-    ] = useState("");
+    const today =
+        useMemo(() => {
+            const now =
+                new Date();
+
+            const localDate =
+                new Date(
+                    now.getTime() -
+                    now.getTimezoneOffset() *
+                    60_000
+                );
+
+            return localDate
+                .toISOString()
+                .split("T")[0];
+        }, []);
 
     const [
         isSubmitting,
@@ -202,13 +214,7 @@ export function PlanYourTourForm({
         setErrorMessage,
     ] = useState("");
 
-    useEffect(() => {
-        setToday(
-            new Date()
-                .toISOString()
-                .split("T")[0]
-        );
-    }, []);
+
 
     async function handleSubmit(
         event: FormEvent<HTMLFormElement>

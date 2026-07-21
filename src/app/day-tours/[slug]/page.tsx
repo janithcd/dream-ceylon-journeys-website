@@ -10,7 +10,7 @@ import {
     Check,
     CircleDollarSign,
     Clock3,
-    Compass,
+
     MapPin,
     Route,
     ShieldCheck,

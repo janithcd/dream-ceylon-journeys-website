@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import {
-    useEffect,
+
     useMemo,
     useState,
 } from "react";
@@ -303,21 +303,29 @@ export function TourGallery({
                 visiblePhotos,
             ]
         );
+    const handleCategoryChange = (
+        categoryValue: string
+    ) => {
+        if (
+            categoryValue ===
+            activeCategory
+        ) {
+            return;
+        }
 
-    useEffect(
-        () => {
-            setVisibleCount(
-                initialPhotoCount
-            );
+        setActiveCategory(
+            categoryValue
+        );
 
-            setLightboxIndex(
-                -1
-            );
-        },
-        [
-            activeCategory,
-        ]
-    );
+        setVisibleCount(
+            initialPhotoCount
+        );
+
+        setLightboxIndex(
+            -1
+        );
+    };
+
 
     if (
         photos.length ===
@@ -412,7 +420,7 @@ export function TourGallery({
                                 }
                                 type="button"
                                 onClick={() =>
-                                    setActiveCategory(
+                                    handleCategoryChange(
                                         category.value
                                     )
                                 }
