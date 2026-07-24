@@ -15,38 +15,62 @@ import {
     getVehicles,
 } from "@/lib/vehicles";
 
-export const revalidate = 3600;
+export const revalidate =
+    3600;
 
 const siteUrl = (
-    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env
+        .NEXT_PUBLIC_SITE_URL ||
     "http://localhost:3000"
-).replace(/\/+$/, "");
+).replace(
+    /\/+$/,
+    ""
+);
+
+type SitemapEntry =
+    MetadataRoute
+        .Sitemap[number];
 
 type UnknownRecord =
-    Record<string, unknown>;
+    Record<
+        string,
+        unknown
+    >;
 
 function isRecord(
-    value: unknown
+    value:
+    unknown
 ): value is UnknownRecord {
     return (
-        typeof value === "object" &&
-        value !== null &&
-        !Array.isArray(value)
+        typeof value ===
+        "object" &&
+        value !==
+        null &&
+        !Array.isArray(
+            value
+        )
     );
 }
 
 function getString(
-    value: unknown
+    value:
+    unknown
 ): string {
-    return typeof value === "string"
+    return typeof value ===
+    "string"
         ? value.trim()
         : "";
 }
 
 function getSlug(
-    value: unknown
+    value:
+    unknown
 ): string {
-    if (!isRecord(value)) {
+    if (
+        !isRecord(
+            value
+        )
+    ) {
         return "";
     }
 
@@ -56,13 +80,15 @@ function getSlug(
 }
 
 function getLastModified(
-    value: unknown
-): Date {
-    const fallback =
-        new Date();
-
-    if (!isRecord(value)) {
-        return fallback;
+    value:
+    unknown
+): Date | undefined {
+    if (
+        !isRecord(
+            value
+        )
+    ) {
+        return undefined;
     }
 
     const rawDate =
@@ -70,45 +96,86 @@ function getLastModified(
         value.createdAt;
 
     if (
-        typeof rawDate !== "string" &&
+        typeof rawDate !==
+        "string" &&
         !(rawDate instanceof Date)
     ) {
-        return fallback;
+        return undefined;
     }
 
     const parsedDate =
-        new Date(rawDate);
+        new Date(
+            rawDate
+        );
 
     return Number.isNaN(
         parsedDate.getTime()
     )
-        ? fallback
+        ? undefined
         : parsedDate;
 }
 
 function createUrl(
-    pathname: string
+    pathname:
+    string
 ): string {
     const cleanPath =
-        pathname.startsWith("/")
+        pathname.startsWith(
+            "/"
+        )
             ? pathname
             : `/${pathname}`;
 
     return `${siteUrl}${cleanPath}`;
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const now =
-        new Date();
+function createDynamicEntry(
+    pathname:
+    string,
+    value:
+    unknown,
+    priority:
+    number
+): SitemapEntry {
+    const lastModified =
+        getLastModified(
+            value
+        );
 
+    return {
+        url:
+            createUrl(
+                pathname
+            ),
+
+        changeFrequency:
+            "monthly",
+
+        priority,
+
+        ...(lastModified
+            ? {
+                lastModified,
+            }
+            : {}),
+    };
+}
+
+export default async function sitemap():
+    Promise<MetadataRoute.Sitemap> {
+    /*
+     * Include only real public routes.
+     *
+     * Add privacy and terms pages later
+     * after confirming their exact URLs.
+     */
     const staticPages:
         MetadataRoute.Sitemap = [
         {
             url:
-                createUrl("/"),
-
-            lastModified:
-            now,
+                createUrl(
+                    "/"
+                ),
 
             changeFrequency:
                 "weekly",
@@ -119,11 +186,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url:
                 createUrl(
-                    "/sri-lanka-tours"
+                    "/about"
                 ),
 
-            lastModified:
-            now,
+            changeFrequency:
+                "monthly",
+
+            priority:
+                0.8,
+        },
+        {
+            url:
+                createUrl(
+                    "/contact"
+                ),
+
+            changeFrequency:
+                "monthly",
+
+            priority:
+                0.8,
+        },
+        {
+            url:
+                createUrl(
+                    "/sri-lanka-tours"
+                ),
 
             changeFrequency:
                 "weekly",
@@ -137,9 +225,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     "/day-tours"
                 ),
 
-            lastModified:
-            now,
-
             changeFrequency:
                 "weekly",
 
@@ -152,9 +237,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     "/sri-lanka-destinations"
                 ),
 
-            lastModified:
-            now,
-
             changeFrequency:
                 "weekly",
 
@@ -164,14 +246,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url:
                 createUrl(
-                    "/gallery"
+                    "/experiences"
                 ),
 
-            lastModified:
-            now,
-
             changeFrequency:
-                "weekly",
+                "monthly",
 
             priority:
                 0.8,
@@ -179,11 +258,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url:
                 createUrl(
-                    "/vehicles"
+                    "/gallery"
                 ),
 
-            lastModified:
-            now,
+            changeFrequency:
+                "weekly",
+
+            priority:
+                0.7,
+        },
+        {
+            url:
+                createUrl(
+                    "/vehicles"
+                ),
 
             changeFrequency:
                 "weekly",
@@ -196,9 +284,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 createUrl(
                     "/plan-your-tour"
                 ),
-
-            lastModified:
-            now,
 
             changeFrequency:
                 "monthly",
@@ -222,7 +307,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ]);
 
     const dynamicPages:
-        MetadataRoute.Sitemap = [];
+        MetadataRoute.Sitemap =
+        [];
 
     if (
         toursResult.status ===
@@ -233,31 +319,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             of toursResult.value
             ) {
             const slug =
-                getSlug(tour);
+                getSlug(
+                    tour
+                );
 
-            if (!slug) {
+            if (
+                !slug
+            ) {
                 continue;
             }
 
-            dynamicPages.push({
-                url:
-                    createUrl(
-                        `/sri-lanka-tours/${encodeURIComponent(
-                            slug
-                        )}`
-                    ),
-
-                lastModified:
-                    getLastModified(
-                        tour
-                    ),
-
-                changeFrequency:
-                    "monthly",
-
-                priority:
-                    0.8,
-            });
+            dynamicPages.push(
+                createDynamicEntry(
+                    `/sri-lanka-tours/${encodeURIComponent(
+                        slug
+                    )}`,
+                    tour,
+                    0.8
+                )
+            );
         }
     } else {
         console.error(
@@ -275,31 +355,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             of dayToursResult.value
             ) {
             const slug =
-                getSlug(dayTour);
+                getSlug(
+                    dayTour
+                );
 
-            if (!slug) {
+            if (
+                !slug
+            ) {
                 continue;
             }
 
-            dynamicPages.push({
-                url:
-                    createUrl(
-                        `/day-tours/${encodeURIComponent(
-                            slug
-                        )}`
-                    ),
-
-                lastModified:
-                    getLastModified(
-                        dayTour
-                    ),
-
-                changeFrequency:
-                    "monthly",
-
-                priority:
-                    0.8,
-            });
+            dynamicPages.push(
+                createDynamicEntry(
+                    `/day-tours/${encodeURIComponent(
+                        slug
+                    )}`,
+                    dayTour,
+                    0.8
+                )
+            );
         }
     } else {
         console.error(
@@ -321,29 +395,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     destination
                 );
 
-            if (!slug) {
+            if (
+                !slug
+            ) {
                 continue;
             }
 
-            dynamicPages.push({
-                url:
-                    createUrl(
-                        `/sri-lanka-destinations/${encodeURIComponent(
-                            slug
-                        )}`
-                    ),
-
-                lastModified:
-                    getLastModified(
-                        destination
-                    ),
-
-                changeFrequency:
-                    "monthly",
-
-                priority:
-                    0.8,
-            });
+            dynamicPages.push(
+                createDynamicEntry(
+                    `/sri-lanka-destinations/${encodeURIComponent(
+                        slug
+                    )}`,
+                    destination,
+                    0.8
+                )
+            );
         }
     } else {
         console.error(
@@ -361,31 +427,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             of vehiclesResult.value
             ) {
             const slug =
-                getSlug(vehicle);
+                getSlug(
+                    vehicle
+                );
 
-            if (!slug) {
+            if (
+                !slug
+            ) {
                 continue;
             }
 
-            dynamicPages.push({
-                url:
-                    createUrl(
-                        `/vehicles/${encodeURIComponent(
-                            slug
-                        )}`
-                    ),
-
-                lastModified:
-                    getLastModified(
-                        vehicle
-                    ),
-
-                changeFrequency:
-                    "monthly",
-
-                priority:
-                    0.7,
-            });
+            dynamicPages.push(
+                createDynamicEntry(
+                    `/vehicles/${encodeURIComponent(
+                        slug
+                    )}`,
+                    vehicle,
+                    0.7
+                )
+            );
         }
     } else {
         console.error(
@@ -397,7 +457,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const uniquePages =
         new Map<
             string,
-            MetadataRoute.Sitemap[number]
+            SitemapEntry
         >();
 
     for (

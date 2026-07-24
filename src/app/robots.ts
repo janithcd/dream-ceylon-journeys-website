@@ -6,7 +6,10 @@ const siteUrl = (
     process.env
         .NEXT_PUBLIC_SITE_URL ||
     "http://localhost:3000"
-).replace(/\/+$/, "");
+).replace(
+    /\/+$/,
+    ""
+);
 
 const isPublicProductionSite =
     process.env.NODE_ENV ===
@@ -18,7 +21,12 @@ const isPublicProductionSite =
         "127.0.0.1"
     );
 
-export default function robots(): MetadataRoute.Robots {
+export default function robots():
+    MetadataRoute.Robots {
+    /*
+     * Prevent development and preview
+     * deployments from being indexed.
+     */
     if (
         !isPublicProductionSite
     ) {
@@ -34,17 +42,39 @@ export default function robots(): MetadataRoute.Robots {
     }
 
     return {
-        rules: {
-            userAgent:
-                "*",
+        rules: [
+            {
+                /*
+                 * Normal search engines,
+                 * including Google and Bing.
+                 */
+                userAgent:
+                    "*",
 
-            allow:
-                "/",
+                allow:
+                    "/",
 
-            disallow: [
-                "/api/",
-            ],
-        },
+                disallow: [
+                    "/api/",
+                ],
+            },
+            {
+                /*
+                 * Allows public pages to be
+                 * discovered and cited by
+                 * ChatGPT Search.
+                 */
+                userAgent:
+                    "OAI-SearchBot",
+
+                allow:
+                    "/",
+
+                disallow: [
+                    "/api/",
+                ],
+            },
+        ],
 
         sitemap:
             `${siteUrl}/sitemap.xml`,
