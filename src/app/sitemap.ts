@@ -163,12 +163,7 @@ function createDynamicEntry(
 
 export default async function sitemap():
     Promise<MetadataRoute.Sitemap> {
-    /*
-     * Include only real public routes.
-     *
-     * Add privacy and terms pages later
-     * after confirming their exact URLs.
-     */
+    /* Include published public routes, including customer policies. */
     const staticPages:
         MetadataRoute.Sitemap = [
         {
@@ -290,6 +285,21 @@ export default async function sitemap():
 
             priority:
                 0.9,
+        },
+        {
+            url: createUrl("/refund-policy"),
+            changeFrequency: "yearly",
+            priority: 0.5,
+        },
+        {
+            url: createUrl("/privacy"),
+            changeFrequency: "yearly",
+            priority: 0.5,
+        },
+        {
+            url: createUrl("/terms"),
+            changeFrequency: "yearly",
+            priority: 0.5,
         },
     ];
 

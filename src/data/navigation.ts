@@ -464,6 +464,11 @@ export const footerNavigation = {
 
     legal: [
         {
+            label: "Refund & Cancellation Policy",
+            labelKey: "refund",
+            href: "/refund-policy",
+        },
+        {
             label:
                 "Privacy Policy",
 
